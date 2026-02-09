@@ -1,58 +1,40 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="rtl">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>Mind Break OS | Professional Edition</title>
+	<title>Mind Break OS</title>
+
+	<link rel="apple-touch-icon" href="mind.png">
+	<link rel="icon" type="image/png" href="mind.png">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="Mind Break">
+
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://unpkg.com/lucide@latest"></script>
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-		body { font-family: 'Tajawal', sans-serif; background-color: #F8F5EE; color: #331111; margin: 0; overflow-x: hidden; }
-		
-		/* إطار الشعار المطور */
-		.logo-frame {
-			width: 80px; height: 80px;
-			background: white;
-			border-radius: 50%;
-			display: flex; align-items: center; justify-content: center;
-			box-shadow: 0 10px 25px rgba(99, 35, 35, 0.15);
-			border: 3px solid rgba(255, 255, 255, 0.8);
-			margin: 0 auto 20px;
-		}
-
+		body { font-family: 'Tajawal', sans-serif; background-color: #F8F5EE; color: #331111; margin: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+		.logo-frame { width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(99, 35, 35, 0.15); border: 3px solid rgba(255, 255, 255, 0.8); margin: 0 auto 20px; }
 		.glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 2.5rem; }
-		
 		.page-content { display: none; min-height: 85vh; padding-bottom: 120px; }
-		.page-content.active { display: block; animation: smoothIn 0.4s ease-out; }
-		
-		@keyframes smoothIn {
-			from { opacity: 0; transform: scale(0.96); }
-			to { opacity: 1; transform: scale(1); }
-		}
-
-		.nav-active { 
-			background: #632323 !important; 
-			color: white !important; 
-			transform: translateY(-8px); 
-			box-shadow: 0 12px 20px rgba(99, 35, 35, 0.25); 
-		}
-		
-		.calendar-day { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 1rem; font-weight: bold; font-size: 0.9rem; transition: 0.3s; cursor: pointer; }
+		.page-content.active { display: block; animation: smoothIn 0.3s ease-out; }
+		@keyframes smoothIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+		.nav-active { background: #632323 !important; color: white !important; transform: translateY(-8px); box-shadow: 0 12px 20px rgba(99, 35, 35, 0.25); }
+		.calendar-day { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 1rem; font-weight: bold; cursor: pointer; }
 		.admin-only { display: none; }
 	</style>
 </head>
 <body>
 
 	<section id="login-page" class="fixed inset-0 z-[100] bg-[#F8F5EE] flex items-center justify-center p-6">
-		<div class="glass p-12 w-full max-w-sm text-center shadow-2xl border-white/80">
-			<div class="logo-frame">
-				<img src="mind.png" alt="Logo" class="w-14 h-14 object-contain">
-			</div>
-			<h2 class="text-2xl font-black text-[#632323] mb-8 tracking-tighter">MIND BREAK VALET SYSTEM</h2>
+		<div class="glass p-12 w-full max-w-sm text-center shadow-2xl">
+			<div class="logo-frame"><img src="mind.png" alt="Logo" class="w-14 h-14 object-contain"></div>
+			<h2 class="text-2xl font-black text-[#632323] mb-8 tracking-tighter uppercase">MIND BREAK</h2>
 			<div class="space-y-4">
-				<input type="text" id="login-user" placeholder="Email Address" dir="ltr" class="w-full p-4 rounded-2xl bg-white/80 border-none outline-none focus:ring-2 ring-[#632323] shadow-sm">
-				<input type="password" id="login-pass" placeholder="Password" dir="ltr" class="w-full p-4 rounded-2xl bg-white/80 border-none outline-none focus:ring-2 ring-[#632323] shadow-sm">
+				<input type="text" id="login-user" placeholder="Email Address" dir="ltr" class="w-full p-4 rounded-2xl bg-white/80 border-none outline-none focus:ring-2 ring-[#632323]">
+				<input type="password" id="login-pass" placeholder="Password" dir="ltr" class="w-full p-4 rounded-2xl bg-white/80 border-none outline-none focus:ring-2 ring-[#632323]">
 				<button onclick="handleLogin()" id="login-btn" class="w-full bg-[#632323] text-white py-4 rounded-2xl font-bold text-lg active:scale-95 transition-all shadow-lg mt-4">Login</button>
 			</div>
 		</div>
@@ -61,168 +43,121 @@
 	<div id="main-app" class="hidden opacity-0 transition-opacity duration-700">
 		<header class="p-8 flex justify-between items-center max-w-4xl mx-auto">
 			<div class="flex items-center gap-3">
-				<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md border border-white">
-					<img src="mind.png" alt="Logo" class="w-8 h-8 object-contain">
-				</div>
+				<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md border border-white"><img src="mind.png" alt="Logo" class="w-8 h-8 object-contain"></div>
 				<div>
-					<h1 class="text-sm font-black text-[#632323] tracking-widest">MIND BREAK</h1>
+					<h1 class="text-sm font-black text-[#632323] tracking-widest uppercase">MIND BREAK</h1>
 					<div id="role-badge" class="inline-block px-2 py-0.5 bg-[#632323] text-white text-[7px] rounded-md font-bold uppercase">STAFF</div>
 				</div>
 			</div>
-			<button onclick="location.reload()" class="w-12 h-12 bg-white text-red-600 rounded-2xl shadow-sm flex items-center justify-center border border-white"><i data-lucide="log-out" size="18"></i></button>
+			<button onclick="location.reload()" class="w-12 h-12 bg-white text-red-600 rounded-2xl shadow-sm flex items-center justify-center"><i data-lucide="log-out" size="18"></i></button>
 		</header>
 
 		<main class="max-w-4xl mx-auto px-6">
-			
 			<section id="dashboard" class="page-content active">
 				<div class="glass p-8 shadow-xl">
-					<h2 class="text-xl font-black mb-8 flex items-center gap-3 text-[#632323]">
-						<i data-lucide="plus-circle" size="24"></i> Client Service
-					</h2>
-					<div class="space-y-6">
-						<div>
-							<label class="text-[10px] font-bold opacity-40 px-2 block mb-1">INVOICE NUMBER</label>
-							<input type="number" id="invNum" placeholder="Ex: 5022" class="w-full p-5 rounded-3xl bg-white border-none outline-none focus:ring-2 ring-[#632323] shadow-inner font-bold">
-						</div>
-						
-						<div>
-							<label class="text-[10px] font-bold opacity-40 px-2 block mb-1">PURCHASE AMOUNT (SAR)</label>
-							<input type="number" id="invAmount" oninput="logicValet()" placeholder="0.00" class="w-full p-5 rounded-3xl bg-white border-none outline-none focus:ring-2 ring-[#632323] shadow-inner font-black text-xl text-[#632323]">
-						</div>
-
-						<div id="payment-area" class="hidden bg-[#632323] text-white p-6 rounded-[2.5rem] shadow-xl relative overflow-hidden">
-							<div class="relative z-10">
-								<p class="text-[10px] font-bold opacity-60 mb-1">VALET SERVICE FEE</p>
-								<p class="text-2xl font-black mb-4">15.00 SAR Required</p>
-								<input type="number" id="customerPaid" placeholder="Amount Paid" class="w-full p-4 rounded-2xl bg-white/20 text-white placeholder:text-white/50 border-white/30 border outline-none font-bold">
-							</div>
-						</div>
-
-						<div id="free-badge" class="hidden p-5 rounded-[2.5rem] bg-green-500/10 border border-green-500/20 text-center text-green-700 font-black flex items-center justify-center gap-2">
-							<i data-lucide="sparkles" size="18"></i> FREE SERVICE ELIGIBLE
-						</div>
-
-						<div>
-							<label class="text-[10px] font-bold opacity-40 px-2 block mb-1">VALET CARD NUMBER</label>
-							<input type="number" id="cardNum" placeholder="Ex: 101" class="w-full p-5 rounded-3xl bg-white border-none outline-none focus:ring-2 ring-[#632323] shadow-inner font-bold">
-						</div>
-
-						<button onclick="saveInvoice()" id="save-btn" class="w-full bg-[#632323] text-white py-6 rounded-[2.5rem] font-black shadow-2xl text-xl mt-4 active:scale-95 transition-all">SAVE TRANSACTION</button>
+					<h2 class="text-xl font-black mb-8 text-[#632323] flex items-center gap-2"><i data-lucide="plus-circle"></i> Service</h2>
+					<div class="space-y-5">
+						<input type="number" id="invNum" placeholder="Invoice Number" class="w-full p-5 rounded-3xl bg-white outline-none font-bold shadow-inner">
+						<input type="number" id="invAmount" oninput="logicValet()" placeholder="Amount (SAR)" class="w-full p-5 rounded-3xl bg-white outline-none font-black text-xl text-[#632323] shadow-inner">
+						<div id="payment-area" class="hidden bg-[#632323] text-white p-6 rounded-[2.5rem] shadow-xl"><p class="text-2xl font-black">25.00 SAR Fee Required</p></div>
+						<div id="free-badge" class="hidden p-5 rounded-[2.5rem] bg-green-500/10 border border-green-500/20 text-center text-green-700 font-black uppercase">Free Service</div>
+						<input type="number" id="cardNum" placeholder="Valet Card #" class="w-full p-5 rounded-3xl bg-white outline-none font-bold shadow-inner">
+						<button onclick="saveInvoice()" id="save-btn" class="w-full bg-[#632323] text-white py-6 rounded-[2.5rem] font-black shadow-2xl text-xl mt-4">SAVE</button>
 					</div>
 				</div>
 			</section>
 
 			<section id="reports" class="page-content">
-				<div class="flex justify-between items-end mb-8">
-					<h2 class="text-2xl font-black text-[#632323]">Reports</h2>
-					<span id="user-display" class="text-[10px] font-bold opacity-40 uppercase tracking-widest"></span>
+				<h2 class="text-2xl font-black text-[#632323] mb-6">Reports</h2>
+				<div class="admin-only grid grid-cols-2 gap-4 mb-6">
+					<div class="glass p-5 text-center"><p class="text-[9px] opacity-40 font-bold uppercase mb-1">Revenue</p><p id="total-revenue" class="text-xl font-black text-green-700">0.00</p></div>
+					<div class="glass p-5 text-center"><p class="text-[9px] opacity-40 font-bold uppercase mb-1">Total</p><p id="total-services" class="text-xl font-black text-[#632323]">0</p></div>
 				</div>
-
-				<div class="admin-only grid grid-cols-2 gap-4 mb-8">
-					<div class="glass p-6 text-center shadow-lg"><p class="text-[9px] opacity-40 font-bold uppercase mb-1">Today's Revenue</p><p id="total-revenue" class="text-2xl font-black text-green-700">0.00</p></div>
-					<div class="glass p-6 text-center shadow-lg"><p class="text-[9px] opacity-40 font-bold uppercase mb-1">Total Services</p><p id="total-services" class="text-2xl font-black text-[#632323]">0</p></div>
-				</div>
-
-				<div class="relative mb-8">
-					<input type="text" id="reportSearch" oninput="filterReports()" placeholder="Search by Invoice or Employee..." class="w-full p-5 pr-14 rounded-3xl bg-white border-none outline-none shadow-sm focus:ring-2 ring-[#632323]">
-					<i data-lucide="search" class="absolute left-5 top-5 opacity-20" size="20"></i>
-				</div>
-
 				<div id="invoice-feed" class="space-y-4"></div>
 			</section>
 
 			<section id="employees" class="page-content">
-				<div class="flex justify-between items-center mb-8">
-					<h2 class="text-2xl font-black text-[#632323]">Attendance</h2>
-					<div id="cal-month-name" class="text-[10px] font-black bg-white px-4 py-2 rounded-full shadow-sm text-[#632323] uppercase tracking-wider"></div>
-				</div>
-				<div class="glass p-6 shadow-xl">
-					<div class="grid grid-cols-7 gap-1 text-center text-[9px] font-black opacity-20 mb-6 uppercase tracking-widest">
-						<div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-					</div>
-					<div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
-				</div>
+				<h2 class="text-2xl font-black text-[#632323] mb-6">Attendance</h2>
+				<div class="glass p-6"><div id="calendar-grid" class="grid grid-cols-7 gap-3"></div></div>
 			</section>
 		</main>
 
-		<div id="attendance-modal" class="hidden fixed inset-0 z-[200] bg-black/60 backdrop-blur-md flex items-center justify-center p-6">
-			<div class="glass w-full max-w-sm p-10 bg-white/90 shadow-3xl animate-pageIn">
-				<h3 id="modal-date-label" class="text-xl font-black mb-8 text-[#632323] text-center"></h3>
-				<div class="space-y-5">
-					<div>
-						<label class="text-[10px] font-bold opacity-40 px-2 block mb-1">SELECT EMPLOYEE</label>
-						<select id="emp-select" class="w-full p-5 rounded-2xl bg-[#F8F5EE] border-none outline-none appearance-none font-bold"></select>
-					</div>
-					<div class="grid grid-cols-2 gap-3">
-						<div>
-							<label class="text-[10px] font-bold opacity-40 px-2 block mb-1">STATUS</label>
-							<select id="att-status" class="w-full p-5 rounded-2xl bg-[#F8F5EE] outline-none font-bold">
-								<option value="Present">Present</option>
-								<option value="Absent">Absent</option>
-								<option value="Sick Day">Sick Day</option>
-								<option value="Day Off">Day Off</option>
-							</select>
-						</div>
-						<div>
-							<label class="text-[10px] font-bold opacity-40 px-2 block mb-1">HOURS</label>
-							<input type="number" id="work-hours" value="8" class="w-full p-5 rounded-2xl bg-[#F8F5EE] outline-none font-black text-center">
-						</div>
-					</div>
-					<div class="flex gap-3 pt-6">
-						<button onclick="closeModal()" class="flex-1 py-5 font-bold bg-gray-100 rounded-3xl">Cancel</button>
-						<button onclick="submitAttendanceData()" id="sub-att-btn" class="flex-[2] py-5 font-black bg-[#632323] text-white rounded-3xl shadow-xl">Confirm</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass p-3 flex justify-around shadow-2xl border-white/60 z-[90]">
-			<button onclick="navTo('dashboard')" id="nav-dashboard" class="nav-active p-5 rounded-[2rem] transition-all"><i data-lucide="plus"></i></button>
-			<button onclick="navTo('reports')" id="nav-reports" class="p-5 rounded-[2rem] transition-all"><i data-lucide="bar-chart-3"></i></button>
-			<button onclick="navTo('employees')" id="nav-employees" class="p-5 rounded-[2rem] transition-all"><i data-lucide="calendar-check"></i></button>
+		<nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass p-3 flex justify-around shadow-2xl z-[90]">
+			<button onclick="navTo('dashboard')" id="nav-dashboard" class="nav-active p-5 rounded-[2rem]"><i data-lucide="plus"></i></button>
+			<button onclick="navTo('reports')" id="nav-reports" class="p-5 rounded-[2rem]"><i data-lucide="bar-chart-3"></i></button>
+			<button onclick="navTo('employees')" id="nav-employees" class="p-5 rounded-[2rem] hidden"><i data-lucide="calendar-check"></i></button>
 		</nav>
 	</div>
 
+	<div id="attendance-modal" class="hidden fixed inset-0 z-[200] bg-black/60 backdrop-blur-md flex items-center justify-center p-6">
+		<div class="glass w-full max-w-sm p-10 bg-white shadow-3xl">
+			<h3 id="modal-date-label" class="text-xl font-black mb-6 text-[#632323] text-center"></h3>
+			<div class="space-y-4">
+				<select id="emp-select" class="w-full p-5 rounded-2xl bg-[#F8F5EE] outline-none font-bold"></select>
+				<select id="att-status" class="w-full p-5 rounded-2xl bg-[#F8F5EE] outline-none font-bold">
+					<option value="Present">Present</option><option value="Absent">Absent</option><option value="Sick">Sick</option>
+				</select>
+				<div class="flex gap-3 pt-4">
+					<button onclick="closeModal()" class="flex-1 py-4 font-bold bg-gray-100 rounded-2xl">Cancel</button>
+					<button onclick="submitAttendanceData()" id="sub-att-btn" class="flex-[2] py-4 font-black bg-[#632323] text-white rounded-2xl">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script>
-		const API_URL = 'https://script.google.com/macros/s/AKfycbw8LIwRyzpq31BKlFfSMCFvJQH9x0eCA0p_DFhRarcEiSQJbbg8Uohb2XbQPfspxSaz/exec';
+		const API_URL = 'https://script.google.com/macros/s/AKfycbxxwsGaYngldO3elGyHUK8OZuR0kqTDOyShWRBLp1_Ws1UXjxAH14kZu3--VcXPemiy/exec';
 		let currentUser = null;
 		let allReports = [];
 		let selectedDate = "";
 
-		lucide.createIcons();
+		// الدالة التي كانت مفقودة وطلبتها أنت:
+		function showApp() {
+			document.getElementById('login-page').classList.add('hidden');
+			document.getElementById('main-app').classList.remove('hidden');
+			setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
+			document.getElementById('role-badge').innerText = currentUser.role;
+			
+			if(currentUser.role === "Admin") {
+				document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'grid');
+				document.getElementById('nav-employees').classList.remove('hidden');
+				document.getElementById('nav-employees').style.display = 'flex';
+			} else {
+				document.getElementById('nav-employees').classList.add('hidden');
+				document.getElementById('nav-employees').style.display = 'none';
+			}
+			lucide.createIcons();
+		}
 
-		// Login Logic
 		async function handleLogin() {
 			const user = document.getElementById('login-user').value.trim();
 			const pass = document.getElementById('login-pass').value.trim();
-			if(!user || !pass) return alert("Please enter credentials");
 			const btn = document.getElementById('login-btn');
-			btn.innerText = "Authenticating..."; btn.disabled = true;
-
+			btn.innerText = "Checking..."; btn.disabled = true;
 			try {
-				const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'login', user, pass }) });
-				const result = await response.json();
-				if(result.status === "success") {
-					currentUser = result;
-					document.getElementById('login-page').style.display = 'none';
-					document.getElementById('main-app').classList.remove('hidden');
-					setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
-					document.getElementById('role-badge').innerText = result.role;
-					document.getElementById('user-display').innerText = result.name;
-					if(result.role === "Admin") document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'grid');
-					lucide.createIcons();
-				} else { alert("Invalid Credentials"); }
-			} catch(e) { alert("Connection Failed"); }
+				const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'login', user, pass }) });
+				const result = await res.json();
+				if(result.status === "success") { currentUser = result; showApp(); }
+				else { alert("Fail"); }
+			} catch(e) { alert("Error"); }
 			btn.innerText = "Login"; btn.disabled = false;
 		}
 
-		// Dashboard Logic (25 SAR)
+		function navTo(id) {
+			document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+			document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active'));
+			document.getElementById(id).classList.add('active');
+			document.getElementById('nav-' + (id==='employees'?'employees':id)).classList.add('nav-active');
+			if(id === 'employees') renderCalendar();
+			if(id === 'reports') loadReports();
+		}
+
 		function logicValet() {
 			const amt = parseFloat(document.getElementById('invAmount').value) || 0;
 			const payArea = document.getElementById('payment-area');
 			const freeB = document.getElementById('free-badge');
-			if(amt > 0 && amt < 15) { payArea.classList.remove('hidden'); freeB.classList.add('hidden'); }
-			else if(amt >= 15) { payArea.classList.add('hidden'); freeB.classList.remove('hidden'); }
+			if(amt > 0 && amt < 25) { payArea.classList.remove('hidden'); freeB.classList.add('hidden'); }
+			else if(amt >= 25) { payArea.classList.add('hidden'); freeB.classList.remove('hidden'); }
 			else { payArea.classList.add('hidden'); freeB.classList.add('hidden'); }
 		}
 
@@ -230,100 +165,53 @@
 			const amt = parseFloat(document.getElementById('invAmount').value);
 			const inv = document.getElementById('invNum').value;
 			const card = document.getElementById('cardNum').value;
-			if(!inv || isNaN(amt) || !card) return alert("All fields are required");
-			
-			const btn = document.getElementById('save-btn');
-			btn.innerText = "Saving Data..."; btn.disabled = true;
-
+			if(!inv || isNaN(amt) || !card) return alert("Missing Info");
 			try {
 				await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
 					action: 'saveInvoice', invoiceNumber: inv, amount: amt, 
 					serviceType: amt >= 25 ? 'Free' : 'Paid', fee: amt >= 25 ? 0 : 25, 
 					cardNum: card, valetName: currentUser.name
 				})});
-				alert("Success! Transaction Saved");
-				resetForm();
-			} catch(e) { alert("Failed to save"); }
-			btn.innerText = "SAVE TRANSACTION"; btn.disabled = false;
+				alert("Saved!");
+				document.querySelectorAll('input').forEach(i => i.value = '');
+				logicValet();
+			} catch(e) { alert("Error"); }
 		}
 
-		function resetForm() {
-			document.querySelectorAll('input').forEach(i => i.value = '');
-			logicValet();
-		}
-
-		// Navigation
-		function navTo(id) {
-			document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-			document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active'));
-			document.getElementById(id).classList.add('active');
-			document.getElementById('nav-' + id).classList.add('nav-active');
-			if(id === 'employees') renderCalendar();
-			if(id === 'reports') loadReports();
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		}
-
-		// Reports Logic (Gregorian)
 		async function loadReports() {
 			const feed = document.getElementById('invoice-feed');
-			feed.innerHTML = '<p class="text-center opacity-40 py-10 font-bold">Syncing reports...</p>';
+			feed.innerHTML = "Loading...";
 			try {
 				const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getReports' }) });
 				allReports = await res.json();
 				renderReports(allReports);
-			} catch(e) { feed.innerHTML = "Sync Error"; }
+			} catch(e) {}
 		}
 
 		function renderReports(data) {
 			const feed = document.getElementById('invoice-feed');
-			let revenue = 0; feed.innerHTML = "";
+			let rev = 0; feed.innerHTML = "";
 			data.forEach(item => {
-				revenue += parseFloat(item.fee || 0);
-				const dateObj = new Date(item.date);
-				feed.innerHTML += `
-					<div class="glass p-6 flex justify-between items-center border-white shadow-sm">
-						<div class="text-right">
-							<p class="font-black text-[#632323] text-lg">#${item.invNum}</p>
-							<p class="text-[10px] font-black opacity-30 uppercase">${item.valet}</p>
-						</div>
-						<div class="text-left">
-							<p class="font-black ${item.fee > 0 ? 'text-red-600' : 'text-green-600'} text-xl">${item.fee} SAR</p>
-							<p class="text-[10px] opacity-40 font-bold">${dateObj.toLocaleDateString('en-GB')}</p>
-						</div>
-					</div>`;
+				rev += parseFloat(item.fee || 0);
+				feed.innerHTML += `<div class="glass p-5 flex justify-between items-center"><div><p class="font-black">#${item.invNum}</p><p class="text-[10px] opacity-40">${item.valet}</p></div><div class="text-left font-black">${item.fee} SAR</div></div>`;
 			});
 			if(document.getElementById('total-revenue')) {
-				document.getElementById('total-revenue').innerText = revenue.toFixed(2) + " SAR";
+				document.getElementById('total-revenue').innerText = rev.toFixed(2);
 				document.getElementById('total-services').innerText = data.length;
 			}
 		}
 
-		function filterReports() {
-			const term = document.getElementById('reportSearch').value.toLowerCase();
-			const filtered = allReports.filter(r => r.invNum.toString().includes(term) || r.valet.toLowerCase().includes(term));
-			renderReports(filtered);
-		}
-
-		// Attendance Logic (Gregorian Calendar)
 		function renderCalendar() {
-			const grid = document.getElementById('calendar-grid');
-			const now = new Date();
-			const year = now.getFullYear();
-			const month = now.getMonth();
-			document.getElementById('cal-month-name').innerText = now.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-			grid.innerHTML = "";
-			const firstDay = new Date(year, month, 1).getDay();
-			const daysInMonth = new Date(year, month+1, 0).getDate();
-			for(let i=0; i<firstDay; i++) grid.innerHTML += "<div></div>";
-			for(let d=1; d<=daysInMonth; d++) {
-				const isToday = d === now.getDate() ? 'bg-[#632323] text-white shadow-xl scale-110' : 'bg-white/40 text-[#632323] hover:bg-white';
-				grid.innerHTML += `<div onclick="openModal('${year}-${month+1}-${d}')" class="calendar-day ${isToday} shadow-sm border border-white/20">${d}</div>`;
+			const grid = document.getElementById('calendar-grid'); grid.innerHTML = "";
+			const days = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate();
+			for(let d=1; d<=days; d++) {
+				grid.innerHTML += `<div onclick="openModal('${d}')" class="calendar-day bg-white/40 shadow-sm">${d}</div>`;
 			}
 		}
 
-		function openModal(date) {
-			selectedDate = date;
-			document.getElementById('modal-date-label').innerText = "Date: " + date;
+		function openModal(d) {
+			selectedDate = d;
+			document.getElementById('modal-date-label').innerText = "Day " + d;
 			document.getElementById('attendance-modal').classList.remove('hidden');
 			loadEmpOptions();
 		}
@@ -340,19 +228,16 @@
 
 		async function submitAttendanceData() {
 			const emp = document.getElementById('emp-select').value;
-			const hrs = document.getElementById('work-hours').value;
 			const stat = document.getElementById('att-status').value;
-			const btn = document.getElementById('sub-att-btn');
-			btn.innerText = "Processing..."; btn.disabled = true;
 			try {
 				await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
-					action: 'submitAttendance', employeeName: emp, hours: hrs, status: stat, date: selectedDate, submittedBy: currentUser.name
+					action: 'submitAttendance', employeeName: emp, status: stat, date: selectedDate, submittedBy: currentUser.name
 				})});
-				alert("Attendance Recorded: " + stat);
-				closeModal();
-			} catch(e) { alert("Error updating attendance"); }
-			btn.innerText = "Confirm"; btn.disabled = false;
+				alert("Done"); closeModal();
+			} catch(e) { alert("Error"); }
 		}
+
+		lucide.createIcons();
 	</script>
 </body>
 </html>
