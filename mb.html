@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Mind Break OS</title>
+	<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1pbmQgQnJlYWsgT1MiLAogICJzaG9ydF9uYW1lIjogIk1pbmRPUyIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjRjVGMUUzIiwKICAidGhlbWVfY29sb3ciOiAiIzYzMjMyMyIKfQ==">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://unpkg.com/lucide@latest"></script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+		body { font-family: 'Tajawal', sans-serif; background-color: #F5F1E3; color: #331111; overflow-x: hidden; margin: 0; }
+		.glass { background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 2.5rem; }
+		
+		/* نظام الصفحات المستقلة */
+		.page-content { display: none; min-height: 80vh; padding-bottom: 100px; }
+		.page-content.active { display: block; animation: pageIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+		
+		@keyframes pageIn {
+			from { opacity: 0; transform: translateY(15px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		.nav-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #632323; }
+		.nav-btn.nav-active { background: #632323; color: white; transform: scale(1.1) translateY(-8px); box-shadow: 0 10px 20px -5px rgba(99, 35, 35, 0.4); }
+		input:focus { border-color: #632323 !important; ring: 2px; }
+	</style>
+</head>
+<body>
+
+	<section id="login-page" class="fixed inset-0 z-[100] bg-[#F5F1E3] flex items-center justify-center p-6 transition-all duration-500">
+		<div class="glass p-10 w-full max-w-sm text-center shadow-2xl border-white/80">
+			<img src="mind.png" alt="Logo" class="w-28 mx-auto mb-8 drop-shadow-lg">
+			<div class="space-y-4">
+				<input type="text" id="login-user" placeholder="الحساب (البريد)" class="w-full p-4 rounded-2xl bg-white/60 border-2 border-transparent outline-none transition-all focus:bg-white focus:border-[#632323]">
+				<input type="password" id="login-pass" placeholder="كلمة السر" class="w-full p-4 rounded-2xl bg-white/60 border-2 border-transparent outline-none transition-all focus:bg-white focus:border-[#632323]">
+				<button onclick="handleLogin()" id="login-btn" class="w-full bg-[#632323] text-white py-4 rounded-2xl font-bold text-lg active:scale-95 transition-all shadow-lg hover:brightness-110">دخول</button>
+			</div>
+		</div>
+	</section>
+
+	<div id="main-app" class="hidden opacity-0 transition-opacity duration-500">
+		<header class="p-6 flex justify-between items-center max-w-4xl mx-auto">
+			<img src="mind.png" alt="Logo" class="w-12 h-12 object-contain">
+			<div class="text-center">
+				<h1 class="text-lg font-bold text-[#632323]">Mind Break</h1>
+				<p id="user-display" class="text-[10px] opacity-60 font-bold uppercase tracking-widest"></p>
+			</div>
+			<button onclick="location.reload()" class="p-3 bg-red-50 text-red-600 rounded-2xl shadow-sm active:scale-90 transition-all"><i data-lucide="log-out" size="20"></i></button>
+		</header>
+
+		<main class="max-w-4xl mx-auto px-4">
+			
+			<section id="dashboard" class="page-content active">
+				<div class="glass p-8 shadow-xl border-white/80">
+					<h2 class="text-xl font-bold mb-8 flex items-center gap-3 text-[#632323]">
+						<i data-lucide="plus-circle"></i> خدمة عميل جديدة
+					</h2>
+					<div class="space-y-6 text-right">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div class="space-y-2">
+								<label class="text-xs font-bold opacity-40 px-2 block">رقم فاتورة الكافيه</label>
+								<input type="text" id="invNum" placeholder="50XX" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323]">
+							</div>
+							<div class="space-y-2">
+								<label class="text-xs font-bold opacity-40 px-2 block">مبلغ المشتريات (SAR)</label>
+								<input type="number" id="invAmount" oninput="logicValet()" placeholder="0.00" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323] font-bold">
+							</div>
+						</div>
+
+						<div id="payment-area" class="hidden transform transition-all duration-300">
+							<div class="bg-red-50 p-6 rounded-[2.5rem] border-2 border-dashed border-[#632323]/20">
+								<div class="flex justify-between items-center mb-4">
+									<span class="text-sm font-bold text-red-800">يجب تحصيل رسوم الخدمة:</span>
+									<span class="text-2xl font-black text-[#632323]">25 SAR</span>
+								</div>
+								<label class="text-xs font-bold opacity-40 px-2 block mb-2">المبلغ المدفوع للخدمة الآن</label>
+								<input type="number" id="customerPaid" placeholder="أدخل 25" class="w-full p-4 rounded-2xl bg-white border-2 border-[#632323] text-center text-xl font-bold text-[#632323]">
+							</div>
+						</div>
+
+						<div id="free-badge" class="hidden p-4 rounded-2xl bg-green-100/50 border border-green-200 text-center text-green-700 font-bold animate-bounce">
+							✨ العميل يستحق خدمة مجانية
+						</div>
+
+						<div class="space-y-2">
+							<label class="text-xs font-bold opacity-40 px-2 block">رقم كرت الفاليه</label>
+							<input type="number" id="cardNum" placeholder="000" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323]">
+						</div>
+
+						<button onclick="saveInvoice()" id="save-btn" class="w-full bg-[#632323] text-white py-5 rounded-[2.5rem] font-bold shadow-2xl text-xl hover:brightness-125 active:scale-95 transition-all mt-4">
+							حفظ العملية
+						</button>
+					</div>
+				</div>
+			</section>
+
+			<section id="reports" class="page-content">
+				<div class="flex justify-between items-center mb-6">
+					<h2 class="text-2xl font-bold text-[#632323]">التقارير</h2>
+					<button class="bg-white p-3 rounded-2xl shadow-sm border border-white"><i data-lucide="download"></i></button>
+				</div>
+				<div class="grid grid-cols-2 gap-4 mb-6">
+					<div class="glass p-6 text-center shadow-lg border-white">
+						<p class="text-[10px] opacity-50 font-bold">إجمالي الخدمات</p>
+						<p id="total-services" class="text-2xl font-black text-[#632323]">0</p>
+					</div>
+					<div class="glass p-6 text-center shadow-lg border-white">
+						<p class="text-[10px] opacity-50 font-bold">الإيرادات (SAR)</p>
+						<p id="total-revenue" class="text-2xl font-black text-green-700">0</p>
+					</div>
+				</div>
+				<div id="invoice-feed" class="space-y-4">
+					<div class="glass p-8 text-center opacity-40 italic">لا يوجد بيانات لعرضها حالياً</div>
+				</div>
+			</section>
+
+			<section id="employees" class="page-content">
+				<h2 class="text-2xl font-bold mb-6">الموظفين</h2>
+				<div class="space-y-4" id="employee-list">
+					<div class="glass p-5 flex items-center justify-between shadow-sm">
+						<div class="flex items-center gap-4">
+							<div class="w-12 h-12 bg-[#632323] text-white rounded-full flex items-center justify-center font-bold">M</div>
+							<div>
+								<p class="font-bold">محسن إبراهيم</p>
+								<p class="text-[10px] opacity-50 uppercase tracking-tighter">Op Manager</p>
+							</div>
+						</div>
+						<span class="bg-green-100 text-green-700 text-[10px] px-3 py-1 rounded-full font-bold">نشط</span>
+					</div>
+				</div>
+			</section>
+
+			<section id="settings" class="page-content">
+				<h2 class="text-2xl font-bold mb-6 text-right">الإعدادات</h2>
+				<div class="glass overflow-hidden shadow-xl border-white/80">
+					<div class="p-5 flex justify-between items-center border-b border-[#632323]/5">
+						<i data-lucide="chevron-left" size="18" class="opacity-30"></i>
+						<span class="font-bold">تحديث ملف العمل</span>
+					</div>
+					<div class="p-5 flex justify-between items-center border-b border-[#632323]/5">
+						<i data-lucide="chevron-left" size="18" class="opacity-30"></i>
+						<span class="font-bold">قواعد العمل (25 SAR)</span>
+					</div>
+					<div class="p-5 flex justify-between items-center text-red-600 active:bg-red-50 transition-colors" onclick="location.reload()">
+						<i data-lucide="log-out" size="18"></i>
+						<span class="font-bold">تسجيل الخروج</span>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm glass p-2 flex justify-around shadow-2xl border-white/80 z-[90]">
+			<button onclick="navTo('dashboard')" id="nav-dashboard" class="nav-btn nav-active p-4 rounded-[1.8rem]"><i data-lucide="home"></i></button>
+			<button onclick="navTo('reports')" id="nav-reports" class="nav-btn p-4 rounded-[1.8rem]"><i data-lucide="bar-chart-2"></i></button>
+			<button onclick="navTo('employees')" id="nav-employees" class="nav-btn p-4 rounded-[1.8rem]"><i data-lucide="users"></i></button>
+			<button onclick="navTo('settings')" id="nav-settings" class="nav-btn p-4 rounded-[1.8rem]"><i data-lucide="settings"></i></button>
+		</nav>
+	</div>
+
+	<script>
+		const API_URL = 'https://script.google.com/macros/s/AKfycbyTJRL38235vcIj6OTXGCFZRZBlSk6r97_-of3X2VqdjfZRh3JrH7hhZ1Q-max8aZFm/exec';
+		let currentUser = null;
+
+		lucide.createIcons();
+
+		// نظام التنقل الفعلي بين الصفحات
+		function navTo(pageId) {
+			document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+			document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+			
+			document.getElementById(pageId).classList.add('active');
+			document.getElementById('nav-' + pageId).classList.add('nav-active');
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+
+		// دالة تسجيل الدخول المصلحة
+		async function handleLogin() {
+			const user = document.getElementById('login-user').value.trim();
+			const pass = document.getElementById('login-pass').value.trim();
+			const btn = document.getElementById('login-btn');
+			
+			if(!user || !pass) {
+				alert("يرجى إدخال الحساب وكلمة المرور");
+				return;
+			}
+
+			btn.innerText = "جاري التحقق... ⏳";
+			btn.disabled = true;
+			
+			try {
+				const response = await fetch(API_URL, {
+					method: 'POST',
+					body: JSON.stringify({ action: 'login', user: user, pass: pass }),
+					headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+				});
+				
+				const text = await response.text();
+				const result = JSON.parse(text);
+				
+				if (result.status === "success") {
+					currentUser = result;
+					document.getElementById('login-page').style.opacity = '0';
+					setTimeout(() => {
+						document.getElementById('login-page').style.display = 'none';
+						document.getElementById('main-app').classList.remove('hidden');
+						setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
+					}, 500);
+					document.getElementById('user-display').innerText = result.name;
+					lucide.createIcons();
+				} else {
+					alert("⚠️ الحساب أو كلمة المرور غير صحيحة");
+				}
+			} catch (e) {
+				alert("❌ فشل الاتصال بالسيرفر. تأكد من إعدادات النشر في جوجل.");
+			} finally {
+				btn.innerText = "دخول";
+				btn.disabled = false;
+			}
+		}
+
+		// منطق الفاتورة (أقل من 25 ريال)
+		function logicValet() {
+			const amount = parseFloat(document.getElementById('invAmount').value) || 0;
+			const payArea = document.getElementById('payment-area');
+			const freeBadge = document.getElementById('free-badge');
+			
+			if (amount > 0 && amount < 25) {
+				payArea.classList.remove('hidden');
+				freeBadge.classList.add('hidden');
+			} else if (amount >= 25) {
+				payArea.classList.add('hidden');
+				freeBadge.classList.remove('hidden');
+				document.getElementById('customerPaid').value = '';
+			} else {
+				payArea.classList.add('hidden');
+				freeBadge.classList.add('hidden');
+			}
+		}
+
+		// حفظ الفاتورة
+		async function saveInvoice() {
+			const amount = parseFloat(document.getElementById('invAmount').value);
+			const customerPaid = parseFloat(document.getElementById('customerPaid').value) || 0;
+			const invNum = document.getElementById('invNum').value;
+			const cardNum = document.getElementById('cardNum').value;
+
+			if (!invNum || isNaN(amount) || !cardNum) {
+				alert("⚠️ يرجى تعبئة كافة الحقول (رقم الفاتورة، المبلغ، ورقم الكرت)");
+				return;
+			}
+
+			if (amount < 25 && customerPaid < 25) {
+				alert("⚠️ الفاتورة أقل من 25 ريال. يجب تحصيل 25 ريال من العميل وإدخالها في خانة 'المبلغ المدفوع للخدمة'.");
+				return;
+			}
+
+			const data = {
+				action: 'saveInvoice',
+				invoiceNumber: invNum,
+				amount: amount,
+				serviceType: amount >= 25 ? 'Free' : 'Paid',
+				fee: amount >= 25 ? 0 : 25,
+				cardNum: cardNum,
+				valetName: currentUser.name
+			};
+
+			const btn = document.getElementById('save-btn');
+			btn.innerText = "جاري الحفظ... ⏳";
+			btn.disabled = true;
+
+			try {
+				// استخدام no-cors للحفظ لضمان سرعة الاستجابة مع جوجل
+				await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+				alert("✅ تم حفظ العملية بنجاح في !");
+				resetForm();
+			} catch (e) { alert("❌ خطأ أثناء الحفظ"); }
+			
+			btn.innerText = "حفظ العملية";
+			btn.disabled = false;
+		}
+
+		function resetForm() {
+			document.getElementById('invAmount').value = '';
+			document.getElementById('invNum').value = '';
+			document.getElementById('cardNum').value = '';
+			document.getElementById('customerPaid').value = '';
+			logicValet();
+		}
+	</script>
+</body>
+</html>
