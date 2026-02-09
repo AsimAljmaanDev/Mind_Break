@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>Mind Break OS | نظام الإدارة</title>
+	<title>Mind Break OS</title>
 	<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1pbmQgQnJlYWsgT1MiLAogICJzaG9ydF9uYW1lIjogIk1pbmRPUyIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjRjVGMUUzIiwKICAidGhlbWVfY29sb3ciOiAiIzYzMjMyMyIKfQ==">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://unpkg.com/lucide@latest"></script>
@@ -11,32 +11,23 @@
 		@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
 		body { font-family: 'Tajawal', sans-serif; background-color: #F5F1E3; color: #331111; margin: 0; overflow-x: hidden; }
 		.glass { background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 2.5rem; }
-		
 		.page-content { display: none; min-height: 80vh; padding-bottom: 120px; }
 		.page-content.active { display: block; animation: pageIn 0.4s ease-out; }
-		
-		@keyframes pageIn {
-			from { opacity: 0; transform: translateY(10px); }
-			to { opacity: 1; transform: translateY(0); }
-		}
-
+		@keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 		.nav-btn { color: #632323; transition: all 0.3s; }
-		.nav-active { background: #632323 !important; color: white !important; transform: scale(1.1) translateY(-8px); shadow: 0 10px 15px rgba(99, 35, 35, 0.3); }
-		
-		/* تصميم التقويم */
-		.calendar-day { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 1rem; font-weight: bold; font-size: 0.9rem; transition: 0.2s; }
-		.calendar-day:active { transform: scale(0.9); }
+		.nav-active { background: #632323 !important; color: white !important; transform: scale(1.1) translateY(-8px); box-shadow: 0 10px 15px rgba(99, 35, 35, 0.3); }
+		.calendar-day { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 1rem; font-weight: bold; transition: 0.2s; cursor: pointer; }
 	</style>
 </head>
 <body>
 
-	<section id="login-page" class="fixed inset-0 z-[100] bg-[#F5F1E3] flex items-center justify-center p-6 transition-all duration-500">
+	<section id="login-page" class="fixed inset-0 z-[100] bg-[#F5F1E3] flex items-center justify-center p-6">
 		<div class="glass p-10 w-full max-w-sm text-center shadow-2xl border-white/80">
 			<img src="mind.png" alt="Logo" class="w-28 mx-auto mb-8 drop-shadow-lg">
 			<div class="space-y-4">
-				<input type="text" id="login-user" placeholder="الحساب (البريد)" class="w-full p-4 rounded-2xl bg-white/60 border-none outline-none focus:ring-2 ring-[#632323]">
+				<input type="text" id="login-user" placeholder="الحساب" class="w-full p-4 rounded-2xl bg-white/60 border-none outline-none focus:ring-2 ring-[#632323]">
 				<input type="password" id="login-pass" placeholder="كلمة السر" class="w-full p-4 rounded-2xl bg-white/60 border-none outline-none focus:ring-2 ring-[#632323]">
-				<button onclick="handleLogin()" id="login-btn" class="w-full bg-[#632323] text-white py-4 rounded-2xl font-bold text-lg active:scale-95 transition-all shadow-lg">دخول</button>
+				<button onclick="handleLogin()" id="login-btn" class="w-full bg-[#632323] text-white py-4 rounded-2xl font-bold shadow-lg">دخول</button>
 			</div>
 		</div>
 	</section>
@@ -44,53 +35,27 @@
 	<div id="main-app" class="hidden opacity-0 transition-opacity duration-500">
 		<header class="p-6 flex justify-between items-center max-w-4xl mx-auto">
 			<img src="mind.png" alt="Logo" class="w-10 h-10 object-contain">
-			<div class="text-center">
-				<h1 class="text-lg font-bold text-[#632323]">Mind Break</h1>
-				<p id="user-display" class="text-[10px] opacity-60 font-bold uppercase"></p>
-			</div>
-			<button onclick="location.reload()" class="p-3 bg-red-50 text-red-600 rounded-2xl shadow-sm"><i data-lucide="log-out" size="20"></i></button>
+			<div class="text-center"><h1 class="text-lg font-bold text-[#632323]">Mind Break</h1><p id="user-display" class="text-[10px] opacity-60 font-bold uppercase"></p></div>
+			<button onclick="location.reload()" class="p-3 bg-red-50 text-red-600 rounded-2xl"><i data-lucide="log-out" size="20"></i></button>
 		</header>
 
 		<main class="max-w-4xl mx-auto px-4">
 			
 			<section id="dashboard" class="page-content active">
 				<div class="glass p-8 shadow-xl border-white/80">
-					<h2 class="text-xl font-bold mb-8 flex items-center gap-3 text-[#632323]">
-						<i data-lucide="plus-circle"></i> خدمة عميل جديدة
-					</h2>
+					<h2 class="text-xl font-bold mb-8 flex items-center gap-3 text-[#632323]"><i data-lucide="plus-circle"></i> خدمة جديدة</h2>
 					<div class="space-y-6">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div class="space-y-2">
-								<label class="text-xs font-bold opacity-40 px-2 block">رقم فاتورة الكافيه</label>
-								<input type="text" id="invNum" placeholder="50XX" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323]">
-							</div>
-							<div class="space-y-2">
-								<label class="text-xs font-bold opacity-40 px-2 block">مبلغ المشتريات (SAR)</label>
-								<input type="number" id="invAmount" oninput="logicValet()" placeholder="0.00" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323] font-bold">
-							</div>
+							<input type="text" id="invNum" placeholder="رقم الفاتورة" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323]">
+							<input type="number" id="invAmount" oninput="logicValet()" placeholder="مبلغ المشتريات" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323] font-bold">
 						</div>
-
-						<div id="payment-area" class="hidden">
-							<div class="bg-red-50 p-6 rounded-[2.5rem] border-2 border-dashed border-[#632323]/20 animate-pulse">
-								<div class="flex justify-between items-center mb-4">
-									<span class="text-sm font-bold text-red-800">رسوم الخدمة مطلوبة:</span>
-									<span class="text-2xl font-black text-[#632323]">25 SAR</span>
-								</div>
-								<label class="text-xs font-bold opacity-40 block mb-2">المبلغ المدفوع للخدمة</label>
-								<input type="number" id="customerPaid" placeholder="أدخل 25" class="w-full p-4 rounded-2xl bg-white border-2 border-[#632323] text-center text-xl font-bold text-[#632323]">
-							</div>
+						<div id="payment-area" class="hidden bg-red-50 p-6 rounded-[2.5rem] border-2 border-dashed border-[#632323]/20">
+							<p class="text-sm font-bold text-red-800 mb-2 text-center">يجب تحصيل رسوم الخدمة: 25 SAR</p>
+							<input type="number" id="customerPaid" placeholder="أدخل المبلغ المدفوع" class="w-full p-4 rounded-2xl bg-white border-2 border-[#632323] text-center text-xl font-bold text-[#632323]">
 						</div>
-
-						<div id="free-badge" class="hidden p-4 rounded-2xl bg-green-100 border border-green-200 text-center text-green-700 font-bold">
-							✨ العميل يستحق خدمة مجانية
-						</div>
-
-						<div class="space-y-2">
-							<label class="text-xs font-bold opacity-40 px-2 block">رقم كرت الفاليه</label>
-							<input type="number" id="cardNum" placeholder="000" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323]">
-						</div>
-
-						<button onclick="saveInvoice()" id="save-btn" class="w-full bg-[#632323] text-white py-5 rounded-[2.5rem] font-bold shadow-2xl text-xl hover:brightness-110 active:scale-95 transition-all mt-4">حفظ العملية</button>
+						<div id="free-badge" class="hidden p-4 rounded-2xl bg-green-100 border border-green-200 text-center text-green-700 font-bold">✨ الخدمة مجانية</div>
+						<input type="number" id="cardNum" placeholder="رقم كرت الفاليه" class="w-full p-4 rounded-2xl bg-white/50 border-none outline-none focus:ring-2 ring-[#632323]">
+						<button onclick="saveInvoice()" id="save-btn" class="w-full bg-[#632323] text-white py-5 rounded-[2.5rem] font-bold shadow-2xl text-xl">حفظ العملية</button>
 					</div>
 				</div>
 			</section>
@@ -98,19 +63,18 @@
 			<section id="reports" class="page-content">
 				<h2 class="text-2xl font-bold mb-6 text-[#632323]">التقارير المالية</h2>
 				<div class="grid grid-cols-2 gap-4 mb-6 text-center">
-					<div class="glass p-6"><p class="text-[10px] opacity-50 font-bold">الخدمات</p><p class="text-2xl font-black text-[#632323]">--</p></div>
-					<div class="glass p-6"><p class="text-[10px] opacity-50 font-bold">الإيرادات</p><p class="text-2xl font-black text-green-700">--</p></div>
+					<div class="glass p-6"><p class="text-[10px] opacity-50 font-bold">إجمالي الخدمات</p><p id="total-services" class="text-2xl font-black text-[#632323]">0</p></div>
+					<div class="glass p-6"><p class="text-[10px] opacity-50 font-bold">الإيرادات المحصلة</p><p id="total-revenue" class="text-2xl font-black text-green-700">0</p></div>
 				</div>
-				<div class="glass p-8 text-center opacity-30 italic">قائمة العمليات ستظهر هنا...</div>
+				<div id="invoice-feed" class="space-y-4"></div>
 			</section>
 
 			<section id="employees" class="page-content">
 				<div class="flex justify-between items-center mb-6">
 					<h2 class="text-2xl font-bold text-[#632323]">تحضير الموظفين</h2>
-					<div class="text-xs font-bold opacity-50 bg-white px-3 py-1 rounded-full" id="cal-month-name"></div>
+					<div class="text-xs font-bold bg-white px-3 py-1 rounded-full" id="cal-month-name"></div>
 				</div>
-				
-				<div class="glass p-4 shadow-xl border-white/80 mb-6">
+				<div class="glass p-4 shadow-xl border-white/80">
 					<div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold opacity-30 mb-4 uppercase">
 						<div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
 					</div>
@@ -118,16 +82,18 @@
 				</div>
 
 				<div id="attendance-modal" class="hidden fixed inset-0 z-[200] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
-					<div class="glass w-full max-w-sm p-8 bg-white shadow-2xl animate-pageIn">
-						<h3 class="text-xl font-bold mb-6 text-[#632323]" id="modal-date-label">تحضير يوم</h3>
+					<div class="glass w-full max-w-sm p-8 bg-white shadow-2xl">
+						<h3 class="text-lg font-bold mb-6 text-[#632323]" id="modal-date-label"></h3>
 						<div class="space-y-4">
-							<div>
-								<label class="text-xs font-bold opacity-40 block mb-1">اسم الموظف</label>
-								<select id="emp-select" class="w-full p-4 rounded-2xl bg-[#F5F1E3] border-none outline-none focus:ring-2 ring-[#632323]"></select>
-							</div>
-							<div>
-								<label class="text-xs font-bold opacity-40 block mb-1">ساعات العمل</label>
-								<input type="number" id="work-hours" placeholder="8" class="w-full p-4 rounded-2xl bg-[#F5F1E3] border-none outline-none focus:ring-2 ring-[#632323]">
+							<select id="emp-select" class="w-full p-4 rounded-2xl bg-[#F5F1E3] outline-none"></select>
+							<div class="grid grid-cols-2 gap-2">
+								<select id="att-status" class="w-full p-4 rounded-2xl bg-[#F5F1E3] outline-none">
+									<option value="Present">Present</option>
+									<option value="Absent">Absent</option>
+									<option value="Sick Day">Sick Day</option>
+									<option value="Day Off">Day Off</option>
+								</select>
+								<input type="number" id="work-hours" value="8" class="w-full p-4 rounded-2xl bg-[#F5F1E3] outline-none">
 							</div>
 							<div class="flex gap-2 pt-4">
 								<button onclick="closeModal()" class="flex-1 py-4 font-bold bg-gray-100 rounded-2xl">إلغاء</button>
@@ -140,16 +106,11 @@
 
 			<section id="settings" class="page-content">
 				<h2 class="text-2xl font-bold mb-6 text-[#632323]">الإعدادات</h2>
-				<div class="glass divide-y divide-[#632323]/5 overflow-hidden">
-					<div class="p-6 flex justify-between items-center"><span class="font-bold">تنبيهات النظام</span><div class="w-10 h-5 bg-green-500 rounded-full"></div></div>
-					<div class="p-6 flex justify-between items-center"><span class="font-bold">نسخة التطبيق</span><span class="text-xs opacity-40">v2.0.1</span></div>
-					<div onclick="location.reload()" class="p-6 flex justify-between items-center text-red-600 font-bold active:bg-red-50"><span >تسجيل الخروج</span><i data-lucide="log-out" size="18"></i></div>
-				</div>
+				<div class="glass overflow-hidden"><div class="p-6 border-b border-[#632323]/5 font-bold">تنبيهات النظام</div><div class="p-6 border-b border-[#632323]/5 font-bold">تغيير اللغة</div><div onclick="location.reload()" class="p-6 text-red-600 font-bold active:bg-red-50">تسجيل الخروج</div></div>
 			</section>
-
 		</main>
 
-		<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm glass p-2 flex justify-around shadow-2xl border-white/80 z-[90]">
+		<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm glass p-2 flex justify-around shadow-2xl z-[90]">
 			<button onclick="navTo('dashboard')" id="nav-dashboard" class="nav-btn nav-active p-4 rounded-[1.8rem]"><i data-lucide="home"></i></button>
 			<button onclick="navTo('reports')" id="nav-reports" class="nav-btn p-4 rounded-[1.8rem]"><i data-lucide="bar-chart-2"></i></button>
 			<button onclick="navTo('employees')" id="nav-employees" class="nav-btn p-4 rounded-[1.8rem]"><i data-lucide="users"></i></button>
@@ -158,37 +119,30 @@
 	</div>
 
 	<script>
-		const API_URL = 'https://script.google.com/macros/s/AKfycbwY7bit53QruZKmCbdbTUke5CJ6TjnGYDLF7QRsvTNw_St4qeXFUUgh4l8sUb8bCRIS/exec';
-		let currentUser = null;
-		let selectedDate = "";
+		const API_URL = 'https://script.google.com/macros/s/AKfycbyUxo6aSgSGy7DUx6RfSAb-1qvP_lmUh2VYmQ-i9OZAfJIJaWmXlVv6dhbQllybiEym/exec';
+		let currentUser = null; let selectedDate = "";
 
 		lucide.createIcons();
 
-		// نظام التنقل
 		function navTo(id) {
 			document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
 			document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
 			document.getElementById(id).classList.add('active');
 			document.getElementById('nav-'+id).classList.add('nav-active');
 			if(id === 'employees') renderCalendar();
+			if(id === 'reports') loadReports();
 			window.scrollTo({top: 0, behavior: 'smooth'});
 		}
 
-		// تسجيل الدخول
 		async function handleLogin() {
 			const user = document.getElementById('login-user').value.trim();
 			const pass = document.getElementById('login-pass').value.trim();
 			const btn = document.getElementById('login-btn');
-			if(!user || !pass) { alert("أكمل البيانات"); return; }
+			if(!user || !pass) return;
 			btn.innerText = "جاري التحقق..."; btn.disabled = true;
-
 			try {
-				const response = await fetch(API_URL, {
-					method: 'POST',
-					body: JSON.stringify({ action: 'login', user, pass }),
-					headers: {'Content-Type': 'text/plain;charset=utf-8'}
-				});
-				const result = await response.json();
+				const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'login', user, pass }) });
+				const result = await res.json();
 				if(result.status === "success") {
 					currentUser = result;
 					document.getElementById('login-page').style.display = 'none';
@@ -196,12 +150,11 @@
 					setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
 					document.getElementById('user-display').innerText = result.name;
 					lucide.createIcons();
-				} else { alert("بيانات غير صحيحة"); }
-			} catch (e) { alert("خطأ في الاتصال"); }
+				} else { alert("بيانات خاطئة"); }
+			} catch (e) { alert("خطأ اتصال"); }
 			btn.innerText = "دخول"; btn.disabled = false;
 		}
 
-		// منطق الـ 25 ريال
 		function logicValet() {
 			const amt = parseFloat(document.getElementById('invAmount').value) || 0;
 			const payArea = document.getElementById('payment-area');
@@ -211,86 +164,77 @@
 			else { payArea.classList.add('hidden'); freeB.classList.add('hidden'); }
 		}
 
-		// حفظ الفاتورة
 		async function saveInvoice() {
 			const amt = parseFloat(document.getElementById('invAmount').value);
 			const paid = parseFloat(document.getElementById('customerPaid').value) || 0;
 			const inv = document.getElementById('invNum').value;
 			const card = document.getElementById('cardNum').value;
-
-			if(!inv || isNaN(amt) || !card) { alert("أكمل الحقول"); return; }
-			if(amt < 25 && paid < 25) { alert("يجب تحصيل رسوم الخدمة 25 ريال"); return; }
-
-			const btn = document.getElementById('save-btn');
-			btn.innerText = "جاري الحفظ..."; btn.disabled = true;
-
+			if(!inv || isNaN(amt) || !card) return;
+			if(amt < 25 && paid < 25) { alert("يجب تحصيل 25 ريال"); return; }
+			const btn = document.getElementById('save-btn'); btn.innerText = "جاري الحفظ...";
 			try {
 				await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
 					action: 'saveInvoice', invoiceNumber: inv, amount: amt, serviceType: amt >= 25 ? 'Free' : 'Paid',
 					fee: amt >= 25 ? 0 : 25, cardNum: card, valetName: currentUser.name
 				})});
-				alert("تم الحفظ بنجاح"); resetForm();
-			} catch (e) { alert("خطأ في الحفظ"); }
-			btn.innerText = "حفظ العملية"; btn.disabled = false;
+				alert("تم الحفظ"); resetForm();
+			} catch (e) { alert("خطأ"); }
+			btn.innerText = "حفظ العملية";
 		}
 
-		function resetForm() {
-			document.getElementById('invAmount').value = ''; document.getElementById('invNum').value = '';
-			document.getElementById('cardNum').value = ''; document.getElementById('customerPaid').value = '';
-			logicValet();
+		function resetForm() { document.querySelectorAll('input').forEach(i => i.value = ''); logicValet(); }
+
+		async function loadReports() {
+			const feed = document.getElementById('invoice-feed');
+			feed.innerHTML = '<div class="text-center py-10 opacity-30 italic">جاري الجلب...</div>';
+			try {
+				const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getReports' }) });
+				const data = await res.json();
+				let totalRev = 0; feed.innerHTML = "";
+				data.forEach(item => {
+					totalRev += parseFloat(item.fee || 0);
+					feed.innerHTML += `
+						<div class="glass p-4 mb-3 flex justify-between items-center border-white/40">
+							<div class="text-right"><p class="font-bold text-[#632323]">#${item.invNum}</p><p class="text-[9px] opacity-40">بواسطة: ${item.valet}</p></div>
+							<div class="text-left font-black text-green-700">${item.fee} SAR</div>
+						</div>`;
+				});
+				document.getElementById('total-revenue').innerText = totalRev + " SAR";
+				document.getElementById('total-services').innerText = data.length;
+			} catch(e) { feed.innerHTML = "خطأ في التحميل"; }
 		}
 
-		// نظام التقويم والتحضير
 		function renderCalendar() {
-			const grid = document.getElementById('calendar-grid');
-			const now = new Date();
-			const year = now.getFullYear();
-			const month = now.getMonth();
+			const grid = document.getElementById('calendar-grid'); const now = new Date();
+			const year = now.getFullYear(); const month = now.getMonth();
 			document.getElementById('cal-month-name').innerText = now.toLocaleString('en-US', { month: 'long' });
-			
-			const firstDay = new Date(year, month, 1).getDay();
-			const daysInMonth = new Date(year, month + 1, 0).getDate();
 			grid.innerHTML = "";
-			for(let i=0; i<firstDay; i++) grid.innerHTML += "<div></div>";
-			for(let d=1; d<=daysInMonth; d++) {
-				const isToday = d === now.getDate() ? 'bg-[#632323] text-white shadow-lg' : 'bg-white/40 text-[#632323]';
-				grid.innerHTML += `<button onclick="openModal('${year}-${month+1}-${d}')" class="calendar-day ${isToday}">${d}</button>`;
+			for(let i=0; i<new Date(year, month, 1).getDay(); i++) grid.innerHTML += "<div></div>";
+			for(let d=1; d<=new Date(year, month+1, 0).getDate(); d++) {
+				grid.innerHTML += `<button onclick="openModal('${year}-${month+1}-${d}')" class="calendar-day bg-white/40 text-[#632323] hover:bg-[#632323] hover:text-white">${d}</button>`;
 			}
 		}
 
-		function openModal(date) {
-			selectedDate = date;
-			document.getElementById('modal-date-label').innerText = "تحضير يوم: " + date;
-			document.getElementById('attendance-modal').classList.remove('hidden');
-			loadEmpOptions();
-		}
-
+		function openModal(date) { selectedDate = date; document.getElementById('modal-date-label').innerText = "يوم: " + date; document.getElementById('attendance-modal').classList.remove('hidden'); loadEmpOptions(); }
 		function closeModal() { document.getElementById('attendance-modal').classList.add('hidden'); }
-
 		async function loadEmpOptions() {
-			const sel = document.getElementById('emp-select');
-			if(sel.options.length > 0) return;
+			const sel = document.getElementById('emp-select'); if(sel.options.length > 0) return;
 			try {
 				const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getEmployees' }) });
-				const emps = await res.json();
-				emps.forEach(e => sel.innerHTML += `<option value="${e}">${e}</option>`);
+				const emps = await res.json(); emps.forEach(e => sel.innerHTML += `<option value="${e}">${e}</option>`);
 			} catch(e) {}
 		}
 
 		async function submitAttendanceData() {
 			const emp = document.getElementById('emp-select').value;
 			const hrs = document.getElementById('work-hours').value;
-			if(!hrs) { alert("أدخل ساعات العمل"); return; }
-			const btn = document.getElementById('sub-att-btn');
-			btn.innerText = "جاري الحفظ..."; btn.disabled = true;
-
+			const stat = document.getElementById('att-status').value;
 			try {
 				await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
-					action: 'submitAttendance', employeeName: emp, hours: hrs, date: selectedDate, submittedBy: currentUser.name
+					action: 'submitAttendance', employeeName: emp, hours: hrs, status: stat, date: selectedDate, submittedBy: currentUser.name
 				})});
-				alert("تم تسجيل حضور " + emp); closeModal();
+				alert("تم الحفظ"); closeModal();
 			} catch(e) { alert("خطأ"); }
-			btn.innerText = "حفظ"; btn.disabled = false;
 		}
 	</script>
 </body>
