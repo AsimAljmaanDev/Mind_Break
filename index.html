@@ -185,13 +185,15 @@
 		async function captureAndDownload(data) {
 			const cap = document.getElementById('receipt-capture');
 			document.getElementById('cap-data').innerHTML = `
+				<div class="flex justify-between border-b pb-2"><span>اسم العميل:</span><span>${data.clientNamw}</span></div>
+				<div class="flex justify-between border-b pb-2"><span>رقم هاتف العميل:</span><span>${data.phoneNum}</span></div>
 				<div class="flex justify-between border-b pb-2"><span>اللوحة:</span><span>${data.plateNum}</span></div>
 				<div class="flex justify-between border-b pb-2"><span>الكرت:</span><span>#${data.cardNum}</span></div>
 				<div class="flex justify-between border-b pb-2"><span>الخدمة:</span><span>${data.serviceType === 'Free' ? 'FREE SERVICE' : 'PAID SERVICE'}</span></div>
 				${data.amount > 0 ? `<div class="flex justify-between border-b pb-2"><span>المبلغ:</span><span>${data.amount} SAR</span></div>` : ''}
 			`;
 			document.getElementById('cap-staff-name').innerText = currentUser.name;
-			document.getElementById('cap-time').innerText = new Date().toLocaleString('ar-SA');
+			document.getElementById('cap-time').innerText = new Date().toLocaleString('en-US');
 
 			const canvas = await html2canvas(cap, { scale: 2 });
 			const link = document.createElement('a');
