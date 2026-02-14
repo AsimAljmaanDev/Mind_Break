@@ -153,53 +153,67 @@
 		}
 
 		async function saveProcess() {
-			const plate = document.getElementById('plateNum').value;
-			const card = document.getElementById('cardNum').value;
-			const client = document.getElementById('clientName').value;
-			if(!plate || !card || !client) return alert("الرجاء إكمال كافة الحقول!");
+    const plate = document.getElementById('plateNum').value;
+    const card = document.getElementById('cardNum').value;
+    const client = document.getElementById('clientName').value;
+    // سحب رقم الهاتف فقط إذا كان العميل خارجياً، وإلا نضع "-"
+    const phone = (currentMode === 'external') ? (document.getElementById('clientPhone').value || '-') : '-';
 
-			const data = {
-				action: 'saveInvoice', 
-				plateNum: plate, 
-				cardNum: card, 
-				clientName: client,
-				valetName: currentUser.name,
-				serviceType: currentMode === 'mb' ? 'Free' : 'Paid', 
-				amount: currentMode === 'mb' ? 0 : 25,
-				phone: currentMode === 'external' ? (document.getElementById('clientPhone').value || '-') : '-',
-				status: 'Parked'
-			};
+    if(!plate || !card || !client) return alert("الرجاء إكمال كافة الحقول!");
 
-			const btn = document.getElementById('save-btn');
-			btn.disabled = true; btn.innerText = "جاري الحفظ...";
+    const data = {
+        action: 'saveInvoice', 
+        plateNum: plate, 
+        cardNum: card, 
+        clientName: client, // التأكد من كتابة الاسم صحيحاً هنا
+        valetName: currentUser.name,
+        serviceType: currentMode === 'mb' ? 'Free' : 'Paid', 
+        amount: currentMode === 'mb' ? 0 : 25,
+        phoneNum: phone, // توحيد المسمى ليتناسب مع دالة الطباعة
+        status: 'Parked'
+    };
 
-			try {
-				await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-				await captureAndDownload(data);
-				alert("تم حفظ العملية وإصدار الإيصال!");
-				switchTab(currentMode);
-			} catch(e) { alert("حدث خطأ في الاتصال"); }
-			btn.disabled = false; btn.innerText = "إرسال وحفظ العملية";
-		}
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true; btn.innerText = "جاري الحفظ...";
 
-		async function captureAndDownload(data) {
-			const cap = document.getElementById('receipt-capture');
-			document.getElementById('cap-data').innerHTML = `
-				<div class="flex justify-between border-b pb-2"><span>اسم العميل:</span><span>${data.clientNamw}</span></div>
-				<div class="flex justify-between border-b pb-2"><span>رقم هاتف العميل:</span><span>${data.phoneNum}</span></div>
-				<div class="flex justify-between border-b pb-2"><span>اللوحة:</span><span>${data.plateNum}</span></div>
-				<div class="flex justify-between border-b pb-2"><span>الكرت:</span><span>#${data.cardNum}</span></div>
-				<div class="flex justify-between border-b pb-2"><span>الخدمة:</span><span>${data.serviceType === 'Free' ? 'FREE SERVICE' : 'PAID SERVICE'}</span></div>
-				${data.amount > 0 ? `<div class="flex justify-between border-b pb-2"><span>المبلغ:</span><span>${data.amount} SAR</span></div>` : ''}
-			`;
-			document.getElementById('cap-staff-name').innerText = currentUser.name;
-			document.getElementById('cap-time').innerText = new Date().toLocaleString('en-US');
+    try {
+        // إرسال البيانات للسيرفر
+        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+        
+        // استدعاء دالة الطباعة بالبيانات الصحيحة
+        await captureAndDownload(data);
+        
+        alert("تم حفظ العملية وإصدار الإيصال!");
+        switchTab(currentMode); // إعادة تصفير الحقول
+    } catch(e) { 
+        alert("حدث خطأ في الاتصال"); 
+    }
+    btn.disabled = false; btn.innerText = "إرسال وحفظ العملية";
+}
 
-			const canvas = await html2canvas(cap, { scale: 2 });
-			const link = document.createElement('a');
-			link.download = `MB-${data.plateNum}.png`;
-			link.href = canvas.toDataURL();
-			link.click();
+async function captureAndDownload(data) {
+    const cap = document.getElementById('receipt-capture');
+    
+    // تحديث المحتوى مع معالجة القيم الفارغة
+    document.getElementById('cap-data').innerHTML = `
+        <div class="flex justify-between border-b pb-2"><span>اسم العميل:</span><span>${data.clientName || '-'}</span></div>
+        <div class="flex justify-between border-b pb-2"><span>رقم الهاتف:</span><span>${data.phoneNum || '-'}</span></div>
+        <div class="flex justify-between border-b pb-2"><span>اللوحة:</span><span>${data.plateNum}</span></div>
+        <div class="flex justify-between border-b pb-2"><span>الكرت:</span><span>#${data.cardNum}</span></div>
+        <div class="flex justify-between border-b pb-2"><span>الخدمة:</span><span>${data.serviceType === 'Free' ? 'FREE SERVICE' : 'PAID SERVICE'}</span></div>
+        ${data.amount > 0 ? `<div class="flex justify-between border-b pb-2"><span>المبلغ:</span><span>${data.amount} SAR</span></div>` : ''}
+    `;
+    
+    document.getElementById('cap-staff-name').innerText = currentUser.name;
+    document.getElementById('cap-time').innerText = new Date().toLocaleString('ar-SA');
+
+    // عملية التحويل لصورة
+    const canvas = await html2canvas(cap, { scale: 2 });
+    const link = document.createElement('a');
+    link.download = `Invoice-${data.plateNum}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+
 
 			if(data.phone !== '-' && data.phone.length >= 9) {
 				const msg = encodeURIComponent(`مرحباً ${data.clientName}، تم استلام سيارتك بنجاح في Mind Break.\nرقم اللوحة: ${data.plateNum}\nرقم الكرت: ${data.cardNum}`);
