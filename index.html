@@ -48,7 +48,7 @@
 		<main class="max-w-4xl mx-auto px-6">
 			<section id="dashboard" class="page-content">
 				<div class="flex gap-2 mb-6">
-					<button onclick="switchTab('mb')" id="tab-mb" class="flex-1 py-3 rounded-2xl font-bold bg-[#632323] text-white shadow-lg transition-all">عضو Mind Break</button>
+					<button onclick="switchTab('mb')" id="tab-mb" class="flex-1 py-3 rounded-2xl font-bold bg-[#632323] text-white shadow-lg transition-all">Mind Break Member</button>
 					<button onclick="switchTab('external')" id="tab-ext" class="flex-1 py-3 rounded-2xl font-bold bg-white text-[#632323] border border-[#eee]">عميل خارجي</button>
 				</div>
 				<div class="glass p-6 shadow-xl space-y-4">
@@ -81,15 +81,62 @@
 		</nav>
 	</div>
 
-	<div id="receipt-capture" class="fixed -left-[2000px] bg-white p-10 w-[400px] text-center border-4 border-[#632323]">
-		<div class="w-24 h-24 border-2 border-[#632323] p-1 rounded-full mx-auto mb-6 flex items-center justify-center bg-white">
-			<img src="mind.png" class="w-16 h-16">
+	<div id="receipt-capture" class="fixed -left-[2000px] w-[380px] bg-[#F8F5EE] rounded-[2.5rem] overflow-hidden font-tajawal shadow-2xl">
+		<div class="bg-[#632323] p-8 text-center text-white relative">
+			<h2 class="text-2xl font-black tracking-tight">MBO VALET</h2>
+			<p class="text-sm opacity-80">Mind Break Operations</p>
 		</div>
-		<h2 class="font-black text-3xl text-[#632323] border-b-2 border-dashed pb-6 mb-6 uppercase italic tracking-tighter">MIND BREAK</h2>
-		<div id="cap-data" class="space-y-4 text-2xl text-right font-bold"></div>
-		<div class="mt-8 pt-4 border-t border-dashed text-right text-sm">
-			<p class="opacity-60">الموظف المسؤول: <span id="cap-staff-name" class="text-black font-black"></span></p>
-			<p id="cap-time" class="opacity-40 text-[10px] mt-2 font-mono"></p>
+	
+		<div class="p-6 space-y-4">
+			<div class="bg-white/60 p-4 rounded-2xl flex items-center gap-4">
+				<div class="text-[#632323]"><i data-lucide="credit-card"></i></div>
+				<div>
+					<p class="text-[10px] text-gray-500 font-bold uppercase">Card Number</p>
+					<p id="cap-card" class="text-xl font-black text-[#331111]"></p>
+				</div>
+			</div>
+	
+			<div class="bg-white/60 p-4 rounded-2xl flex items-center gap-4">
+				<div class="text-[#632323]"><i data-lucide="car"></i></div>
+				<div>
+					<p class="text-[10px] text-gray-500 font-bold uppercase">Plate Number</p>
+					<p id="cap-plate" class="text-xl font-black text-[#331111] uppercase"></p>
+				</div>
+			</div>
+	
+			<div class="flex gap-4">
+				<div class="flex-1 bg-white/60 p-4 rounded-2xl flex items-center gap-3">
+					<div class="text-[#632323]"><i data-lucide="user" size="18"></i></div>
+					<div>
+						<p class="text-[10px] text-gray-500 font-bold uppercase">Staff</p>
+						<p id="cap-staff-name" class="text-sm font-black text-[#331111]"></p>
+					</div>
+				</div>
+				<div class="flex-1 bg-white/60 p-4 rounded-2xl flex items-center gap-3">
+					<div class="text-[#632323]"><i data-lucide="phone" size="18"></i></div>
+					<div>
+						<p class="text-[10px] text-gray-500 font-bold uppercase">Mobile</p>
+						<p id="cap-mobile" class="text-sm font-black text-[#331111]"></p>
+					</div>
+				</div>
+			</div>
+	
+			<div class="bg-white/60 p-4 rounded-2xl flex items-center gap-4">
+				<div class="text-[#632323]"><i data-lucide="clock"></i></div>
+				<div>
+					<p class="text-[10px] text-gray-500 font-bold uppercase">Parked At</p>
+					<p id="cap-time" class="text-sm font-black text-[#331111]"></p>
+				</div>
+			</div>
+	
+			<div class="bg-[#EAE2D5] p-6 rounded-3xl text-center mt-4">
+				<p class="text-[12px] text-[#632323] font-bold uppercase mb-1">Total Amount</p>
+				<p class="text-4xl font-black text-[#632323]"><span id="cap-amount"></span> SAR</p>
+			</div>
+		</div>
+		
+		<div class="p-6 pt-0 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+			Thank you for choosing Mind Break 
 		</div>
 	</div>
 
