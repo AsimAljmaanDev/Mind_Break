@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbzCbHPH667bXDGIR2JJ9G1M1ripIvUC6Su8M2lFcCdv_9MqstIbhK07Phe4NFaTiplD/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbykjlTkHepuPCg3NeSzsdncYYGRT0YLErO0Sp4NS7Ma0DJOmYhiF3-F923B-pgk9CcX/exec';
 let currentUser = null;
 let currentMode = 'mb';
 
@@ -153,6 +153,13 @@ async function loadReports() {
 
 async function updateStatus(plate, card, newStatus) {
 	if(!confirm("هل أنت متأكد من تغيير حالة المركبة؟")) return;
+	
+	// Find the button that was clicked to show it's working
+	const btn = event.target;
+	const originalText = btn.innerText;
+	btn.disabled = true;
+	btn.innerText = "جاري التحديث...";
+
 	try {
 		await fetch(API_URL, { 
 			method: 'POST', 
@@ -160,15 +167,23 @@ async function updateStatus(plate, card, newStatus) {
 			body: JSON.stringify({ 
 				action: 'updateVehicleStatus', 
 				plateNum: plate, 
-				cardNum: card, // Sending cardNum to match Apps Script check
+				cardNum: card, 
 				status: newStatus 
 			}) 
 		});
 		
-		alert("تم إرسال طلب التحديث بنجاح");
-		setTimeout(loadReports, 1200); 
+		// Visual feedback
+		alert("تم تحديث حالة السيارة بنجاح");
+		
+		// Wait a moment for the Sheet to catch up then reload
+		setTimeout(() => {
+			loadReports();
+		}, 1000);
+
 	} catch(e) { 
-		alert("حدث خطأ في الاتصال"); 
+		alert("حدث خطأ في الاتصال بالسيرفر"); 
+		btn.disabled = false;
+		btn.innerText = originalText;
 	}
 }
 
