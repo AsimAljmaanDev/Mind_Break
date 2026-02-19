@@ -103,22 +103,31 @@ async function saveProcess() {
 
 async function captureAndDownload(data) {
 	const cap = document.getElementById('receipt-capture');
-	document.getElementById('cap-data').innerHTML = `
-		<div class="flex justify-between border-b pb-2"><span>اسم العميل:</span><span>${data.clientName || '-'}</span></div>
-		<div class="flex justify-between border-b pb-2"><span>رقم الهاتف:</span><span>${data.phone || '-'}</span></div>
-		<div class="flex justify-between border-b pb-2"><span>اللوحة:</span><span>${data.plateNum}</span></div>
-		<div class="flex justify-between border-b pb-2"><span>الكرت:</span><span>#${data.cardNum}</span></div>
-		<div class="flex justify-between border-b pb-2"><span>الخدمة:</span><span>${data.serviceType === 'Free' ? 'FREE SERVICE' : 'PAID SERVICE'}</span></div>
-		${data.amount > 0 ? `<div class="flex justify-between border-b pb-2"><span>المبلغ:</span><span>${data.amount} SAR</span></div>` : ''}
-	`;
 	
+	// Fill the new design fields
+	document.getElementById('cap-card').innerText = data.cardNum;
+	document.getElementById('cap-plate').innerText = data.plateNum;
 	document.getElementById('cap-staff-name').innerText = currentUser.name;
-	document.getElementById('cap-time').innerText = new Date().toLocaleString('en-US');
+	document.getElementById('cap-mobile').innerText = data.phone || data.phoneNum || '-';
+	document.getElementById('cap-time').innerText = new Date().toLocaleString('en-GB').replace(',', '');
+	document.getElementById('cap-amount').innerText = data.amount || (currentMode === 'mb' ? '0' : '25');
 
-	const canvas = await html2canvas(cap, { scale: 2 });
+	// Trigger Lucide to render icons inside the hidden capture div
+	lucide.createIcons();
+
+	// Small delay to ensure icons and fonts are rendered before capture
+	await new Promise(r => setTimeout(r, 100));
+
+	const canvas = await html2canvas(cap, { 
+		scale: 3, // High quality
+		backgroundColor: null,
+		logging: false,
+		useCORS: true
+	});
+
 	const link = document.createElement('a');
-	link.download = `Invoice-${data.plateNum}.png`;
-	link.href = canvas.toDataURL();
+	link.download = `MBO-Invoice-${data.plateNum}.png`;
+	link.href = canvas.toDataURL("image/png");
 	link.click();
 }
 
@@ -246,4 +255,12 @@ function navTo(id) {
 	
 	if(id === 'reports') loadReports();
 	if(id === 'attendance') loadAttendanceSystem();
+}
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+	navigator.serviceWorker.register('sw.js')
+	  .then(reg => console.log('Service Worker Registered'))
+	  .catch(err => console.log('Service Worker Failed', err));
+  });
 }
