@@ -1,145 +1,1051 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-root">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>MBO | نظام الإدارة المتكامل</title>
-	
-	<meta name="theme-color" content="#632323">
-	<link rel="manifest" href="manifest.json">
-	<link rel="apple-touch-icon" href="mind.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MBO · Mind Break System</title>
+<meta name="theme-color" content="#3d2b1f">
+<meta name="description" content="Mind Break Operations System">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MBO">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MindBreakOps/MBO-HumanResourceSystem/main/mind.png">
+<link rel="manifest" id="pwa-manifest">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F3F4F6;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --border2: #d1d5db;
+  --accent: #3d2b1f;
+  --accent2: #6b4c3b;
+  --warm: #c0622a;
+  --warm2: #e8905a;
+  --gold: #d4a853;
+  --text: #1f1512;
+  --text2: #4b3a30;
+  --muted: #9b7b6a;
+  --green: #16a34a;
+  --red: #dc2626;
+  --shadow: 0 4px 16px rgba(61,43,31,0.08);
+  --shadow-lg: 0 8px 32px rgba(61,43,31,0.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{height:100%;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;}
+body.lang-en{font-family:'Cairo',sans-serif;}
 
-	<script src="https://cdn.tailwindcss.com"></script>
-	<script src="https://unpkg.com/lucide@latest"></script>
-	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-	
-	<link rel="stylesheet" href="style.css">
+/* ── Screens ── */
+.screen{position:fixed;inset:0;z-index:50;overflow-y:auto;background:var(--bg);}
+.screen.hidden{display:none!important;}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);}
+
+/* ── Fields ── */
+.field{width:100%;padding:13px 16px;background:#f9fafb;border:1.5px solid var(--border);border-radius:14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:15px;font-weight:600;outline:none;transition:border-color .2s,box-shadow .2s;}
+.field:focus{border-color:var(--warm);box-shadow:0 0 0 3px rgba(192,98,42,.1);background:#fff;}
+.field::placeholder{color:var(--muted);}
+select.field option{background:#fff;}
+textarea.field{resize:none;}
+
+/* ── Buttons ── */
+.btn-primary{width:100%;padding:15px;background:var(--accent);color:#fff;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;border:none;border-radius:16px;cursor:pointer;box-shadow:0 4px 16px rgba(61,43,31,.25);transition:all .2s;}
+.btn-primary:active{transform:scale(.97);background:var(--accent2);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+.btn-outline{padding:8px 14px;background:#fff;border:1.5px solid var(--border2);color:var(--text2);font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;border-radius:12px;cursor:pointer;transition:all .2s;}
+.btn-outline:hover{border-color:var(--warm);color:var(--warm);}
+
+/* ── Nav ── */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:8px 16px 20px;display:flex;justify-content:space-around;align-items:center;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 14px;border-radius:14px;cursor:pointer;transition:all .2s;background:transparent;border:none;color:var(--muted);font-family:'Cairo',sans-serif;font-size:10px;font-weight:700;}
+.nav-item.active{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(61,43,31,.25);}
+.nav-item svg{width:20px;height:20px;}
+
+/* ── Tabs ── */
+.tab-btn{flex:1;padding:11px;background:#f3f4f6;border:1.5px solid var(--border);color:var(--muted);font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;border-radius:14px;cursor:pointer;transition:all .2s;}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(61,43,31,.2);}
+
+/* ── Page sections ── */
+.page-content{display:none;padding-bottom:110px;}
+.page-content.active{display:block;animation:fadeUp .3s ease-out;}
+@keyframes fadeUp{from{transform:translateY(16px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* ── Header ── */
+.app-header{padding:12px 18px;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;}
+
+/* ── GPS Radar ── */
+@keyframes rPulse{0%{transform:scale(.7);opacity:.5;}100%{transform:scale(2.2);opacity:0;}}
+@keyframes gPulse{0%{box-shadow:0 0 0 0 rgba(22,163,74,.4);}70%{box-shadow:0 0 0 16px rgba(22,163,74,0);}100%{box-shadow:0 0 0 0 rgba(22,163,74,0);}}
+.radar-ring{position:absolute;border-radius:50%;border:1.5px solid rgba(22,163,74,.2);animation:rPulse 2.8s ease-out infinite;}
+.active-radar{animation:gPulse 2s infinite;}
+.dist-track{height:5px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:8px 0 0;}
+.dist-fill{height:100%;border-radius:99px;transition:width .8s ease,background .5s;}
+
+/* ── Employee attendance cards ── */
+.emp-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:14px 16px;transition:all .2s;margin-bottom:10px;}
+.emp-card.present{border-color:#bbf7d0;background:#f0fdf4;}
+.emp-card.absent{border-color:#fecaca;background:#fef2f2;}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:900;}
+.badge-free{background:#dcfce7;color:var(--green);border:1px solid #bbf7d0;}
+.badge-paid{background:#fef3c7;color:#92400e;border:1px solid #fde68a;}
+.badge-parked{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;}
+.badge-done{background:#dcfce7;color:var(--green);border:1px solid #bbf7d0;}
+
+/* ── Invoice cards ── */
+.inv-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow);}
+
+/* ── Attendance stats ── */
+.att-stat{flex:1;padding:14px;background:#fff;border:1px solid var(--border);border-radius:16px;text-align:center;box-shadow:var(--shadow);}
+.att-stat .num{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;line-height:1;}
+.att-stat .lbl{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px;}
+
+/* ── Board selector cards ── */
+.board-pick{background:#fff;border:1.5px solid var(--border);border-radius:22px;padding:20px;cursor:pointer;transition:all .22s;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow);}
+.board-pick:active{transform:scale(.97);}
+.board-pick:hover{border-color:var(--warm);box-shadow:var(--shadow-lg);}
+
+/* ── Action buttons ── */
+.action-btn{padding:8px 14px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:800;border:1.5px solid;cursor:pointer;transition:all .2s;background:#fff;}
+.action-btn:active{transform:scale(.96);}
+
+/* ── Section header ── */
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.sec-hdr h2{font-size:19px;font-weight:900;color:var(--text);}
+.sec-hdr .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+/* ── Mono ── */
+.mono{font-family:'Space Mono',monospace;}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+
+/* ── Lang toggle ── */
+.lang-toggle{display:flex;background:#f3f4f6;border-radius:12px;padding:3px;border:1px solid var(--border);}
+.lang-btn{padding:5px 12px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'Cairo',sans-serif;transition:all .2s;}
+.lang-btn.active{background:var(--accent);color:#fff;}
+
+/* ── PWA install banner ── */
+#install-banner{display:none;position:fixed;bottom:80px;left:12px;right:12px;z-index:60;background:var(--accent);color:#fff;padding:14px 16px;border-radius:18px;box-shadow:var(--shadow-lg);align-items:center;gap:12px;}
+</style>
 </head>
 <body>
 
-	<section id="login-page" class="fixed inset-0 z-[100] bg-[#F8F5EE] flex items-center justify-center p-6">
-		<div class="glass p-10 w-full max-w-sm text-center shadow-2xl border-2 border-[#632323]/5">
-			<div class="w-20 h-20 border-2 border-[#632323] p-1 rounded-full mx-auto mb-6 flex items-center justify-center bg-white shadow-md">
-				<img src="mind.png" class="w-12 h-12 object-contain" onerror="this.src='https://via.placeholder.com/100?text=MB'">
-			</div>
-			<h2 class="text-xl font-black text-[#632323] mb-8 italic uppercase tracking-tighter">MIND BREAK SYSTEM</h2>
-			<div class="space-y-4">
-				<input type="text" id="login-user" placeholder="البريد الإلكتروني" class="text-center">
-				<input type="password" id="login-pass" placeholder="كلمة المرور" class="text-center">
-				<button onclick="handleLogin()" id="login-btn" class="w-full bg-[#632323] text-white py-4 rounded-2xl font-black active:scale-95 transition-all shadow-lg shadow-[#632323]/20">تسجيل الدخول</button>
-			</div>
+<!-- PWA Install Banner -->
+<div id="install-banner">
+  <img src="https://raw.githubusercontent.com/MindBreakOps/MBO-HumanResourceSystem/main/mind.png" style="width:36px;height:36px;border-radius:10px;flex-shrink:0;">
+  <div style="flex:1;">
+	<div id="ib-title" style="font-size:13px;font-weight:900;">تثبيت التطبيق</div>
+	<div id="ib-sub" style="font-size:11px;opacity:.8;margin-top:1px;">أضف MBO إلى الشاشة الرئيسية</div>
+  </div>
+  <button id="ib-install" onclick="installPWA()" style="padding:8px 14px;background:#fff;color:var(--accent);border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:900;cursor:pointer;" data-ar="تثبيت" data-en="Install">تثبيت</button>
+  <button onclick="document.getElementById('install-banner').style.display='none'" style="background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 4px;">×</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+	 LOGIN
+═══════════════════════════════════════ -->
+<section id="login-page" class="screen" style="display:flex;align-items:center;justify-content:center;padding:28px;min-height:100vh;">
+  <div style="width:100%;max-width:360px;">
+
+	<!-- Lang toggle top -->
+	<div style="display:flex;justify-content:center;margin-bottom:24px;">
+	  <div class="lang-toggle">
+		<button class="lang-btn active" id="lang-ar" onclick="setLang('ar')">العربية</button>
+		<button class="lang-btn" id="lang-en" onclick="setLang('en')">English</button>
+	  </div>
+	</div>
+
+	<!-- Logo + title -->
+	<div style="text-align:center;margin-bottom:28px;">
+	  <div style="width:80px;height:80px;border-radius:24px;background:#fff;border:2px solid var(--border);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:var(--shadow-lg);">
+		<img src="https://raw.githubusercontent.com/MindBreakOps/MBO-HumanResourceSystem/main/mind.png"
+			 style="width:56px;height:56px;object-fit:contain;"
+			 onerror="this.src='';this.parentElement.innerHTML='<span style=\'font-size:24px;font-weight:900;color:var(--accent)\'>MB</span>'">
+	  </div>
+	  <h1 style="font-size:22px;font-weight:900;color:var(--accent);letter-spacing:-.5px;" data-ar="ماند بريك" data-en="MIND BREAK">ماند بريك</h1>
+	  <p style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.12em;margin-top:3px;" data-ar="نظام الإدارة المتكامل" data-en="INTEGRATED MANAGEMENT SYSTEM">نظام الإدارة المتكامل</p>
+	</div>
+
+	<!-- Login card -->
+	<div class="card" style="padding:28px;">
+	  <div style="margin-bottom:14px;">
+		<label class="field-label" style="font-size:11px;color:var(--muted);font-weight:800;display:block;margin-bottom:6px;" data-ar="البريد الإلكتروني" data-en="Email Address">البريد الإلكتروني</label>
+		<input type="email" id="login-user" class="field" style="text-align:right;" onkeydown="if(event.key==='Enter')handleLogin()" data-placeholder-ar="name@mindbreak.com" data-placeholder-en="name@mindbreak.com" placeholder="name@mindbreak.com">
+	  </div>
+	  <div style="margin-bottom:22px;">
+		<label class="field-label" style="font-size:11px;color:var(--muted);font-weight:800;display:block;margin-bottom:6px;" data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+		<input type="password" id="login-pass" class="field" style="text-align:right;" onkeydown="if(event.key==='Enter')handleLogin()" placeholder="••••••••">
+	  </div>
+	  <button onclick="handleLogin()" id="login-btn" class="btn-primary" data-ar="دخول النظام" data-en="Sign In">دخول النظام</button>
+	</div>
+
+	<p style="text-align:center;font-size:10px;color:var(--muted);margin-top:16px;font-weight:600;">MBO · Mind Break Operations · 2026</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+	 BOARD SELECTOR
+═══════════════════════════════════════ -->
+<section id="board-selector" class="screen hidden" style="display:flex;align-items:center;justify-content:center;padding:28px;min-height:100vh;">
+  <div style="width:100%;max-width:360px;">
+
+	<div style="text-align:center;margin-bottom:30px;">
+	  <img src="https://raw.githubusercontent.com/MindBreakOps/MBO-HumanResourceSystem/main/mind.png"
+		   style="width:52px;height:52px;object-fit:contain;margin-bottom:10px;"
+		   onerror="this.style.display='none'">
+	  <p style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.12em;" data-ar="أهلاً وسهلاً" data-en="WELCOME BACK">أهلاً وسهلاً</p>
+	  <h2 id="selector-user-name" style="font-size:22px;font-weight:900;color:var(--accent);margin-top:4px;"></h2>
+	  <p style="font-size:12px;color:var(--muted);margin-top:4px;" data-ar="اختر اللوحة التي تريد فتحها" data-en="Choose a board to open">اختر اللوحة التي تريد فتحها</p>
+	</div>
+
+	<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+	  <div onclick="goToBoard('ops')" id="ops-board-pick" class="board-pick">
+		<div style="width:52px;height:52px;border-radius:16px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(61,43,31,.3);">
+		  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 21 13 16 18 16 8"/></svg>
 		</div>
+		<div style="text-align:right;flex:1;">
+		  <h3 style="font-size:15px;font-weight:900;color:var(--text);" data-ar="لوحة العمليات" data-en="Operations Board">لوحة العمليات</h3>
+		  <p style="font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;">Valet · Reports · Attendance</p>
+		</div>
+		<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+	  </div>
+
+	  <div onclick="goToBoard('hr')" id="hr-board-pick" class="board-pick">
+		<div style="width:52px;height:52px;border-radius:16px;background:#78350f;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(120,53,15,.35);">
+		  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+		</div>
+		<div style="text-align:right;flex:1;">
+		  <h3 style="font-size:15px;font-weight:900;color:var(--text);" data-ar="الموارد البشرية" data-en="HR Board">الموارد البشرية</h3>
+		  <p style="font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;">Attendance · GPS · Requests</p>
+		</div>
+		<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+	  </div>
+	</div>
+
+	<!-- Settings row -->
+	<div class="card" style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+	  <div class="lang-toggle">
+		<button class="lang-btn active" id="lang-ar2" onclick="setLang('ar')">العربية</button>
+		<button class="lang-btn" id="lang-en2" onclick="setLang('en')">English</button>
+	  </div>
+	  <span style="font-size:11px;color:var(--muted);font-weight:700;" data-ar="اللغة" data-en="Language">اللغة</span>
+	</div>
+
+	<button onclick="location.reload()" style="width:100%;padding:12px;background:#fff;border:1.5px solid #fecaca;color:var(--red);font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;border-radius:14px;cursor:pointer;" data-ar="تسجيل الخروج" data-en="Sign Out">تسجيل الخروج</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+	 OPERATIONS APP
+═══════════════════════════════════════ -->
+<div id="ops-app" class="hidden" style="position:relative;">
+
+  <div class="app-header">
+	<div style="display:flex;flex-direction:column;align-items:flex-end;">
+	  <span id="ops-user-display" style="font-size:13px;font-weight:900;color:var(--text);"></span>
+	  <span id="ops-role-tag" style="font-size:9px;color:var(--warm);font-weight:800;letter-spacing:.08em;"></span>
+	</div>
+	<div style="display:flex;gap:8px;align-items:center;">
+	  <!-- Settings gear -->
+	  <button onclick="toggleOpsSettings()" style="width:36px;height:36px;background:#f3f4f6;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+	  </button>
+	  <button onclick="location.reload()" style="width:36px;height:36px;background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;color:var(--red);cursor:pointer;display:flex;align-items:center;justify-content:center;">
+		<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+	  </button>
+	</div>
+  </div>
+
+  <!-- Settings dropdown -->
+  <div id="ops-settings" style="display:none;position:fixed;top:60px;left:12px;right:12px;z-index:45;background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:var(--shadow-lg);">
+	<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+	  <span style="font-size:13px;font-weight:900;color:var(--text);" data-ar="الإعدادات" data-en="Settings">الإعدادات</span>
+	  <button onclick="toggleOpsSettings()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);">×</button>
+	</div>
+	<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+	  <div class="lang-toggle">
+		<button class="lang-btn active" id="lang-ar3" onclick="setLang('ar')">العربية</button>
+		<button class="lang-btn" id="lang-en3" onclick="setLang('en')">English</button>
+	  </div>
+	  <span style="font-size:12px;color:var(--muted);font-weight:700;" data-ar="اللغة" data-en="Language">اللغة</span>
+	</div>
+	<button onclick="showBoardSelector();toggleOpsSettings();" style="width:100%;margin-top:12px;padding:10px;background:#f3f4f6;border:1px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:var(--text);" data-ar="⇄ تبديل اللوحة" data-en="⇄ Switch Board">⇄ تبديل اللوحة</button>
+  </div>
+
+  <div style="max-width:520px;margin:0 auto;padding:18px;">
+
+	<!-- Dashboard -->
+	<section id="ops-dashboard" class="page-content">
+	  <div style="display:flex;gap:8px;margin-bottom:18px;">
+		<button onclick="switchTab('mb')" id="tab-mb" class="tab-btn active" data-ar="عضو Mind Break" data-en="Mind Break Member">عضو Mind Break</button>
+		<button onclick="switchTab('external')" id="tab-ext" class="tab-btn" data-ar="عميل خارجي" data-en="External Client">عميل خارجي</button>
+	  </div>
+	  <div class="card" style="padding:20px;">
+		<div id="form-fields" style="display:flex;flex-direction:column;gap:12px;"></div>
+		<button onclick="saveProcess()" id="save-btn" class="btn-primary" style="margin-top:16px;" data-ar="إرسال وحفظ العملية" data-en="Save & Submit">إرسال وحفظ العملية</button>
+	  </div>
 	</section>
 
-	<div id="main-app" class="hidden">
-		<header class="p-6 flex justify-between items-center max-w-4xl mx-auto">
-			<div class="flex items-center gap-3">
-				<div class="w-12 h-12 border-2 border-[#632323] rounded-full p-1 bg-white flex items-center justify-center shadow-sm">
-					<img src="mind.png" class="w-8 h-8 object-contain">
-				</div>
-				<div>
-					<h1 id="user-display" class="font-black text-[#632323] text-sm"></h1>
-					<span id="role-tag" class="text-[9px] bg-[#632323] text-white px-2 py-0.5 rounded-md font-bold uppercase"></span>
-				</div>
-			</div>
-			<button onclick="location.reload()" class="p-3 bg-white rounded-xl shadow-sm text-red-500 active:bg-red-50"><i data-lucide="power" size="20"></i></button>
-		</header>
+	<!-- Reports -->
+	<section id="ops-reports" class="page-content">
+	  <div class="sec-hdr">
+		<h2 data-ar="العمليات" data-en="Operations">العمليات</h2>
+		<div class="line"></div>
+		<button onclick="loadReports()" style="background:#fff;border:1.5px solid var(--border);padding:7px;border-radius:10px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;">
+		  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+		</button>
+	  </div>
+	  <div id="reports-list"></div>
+	</section>
 
-		<main class="max-w-4xl mx-auto px-6">
-			<section id="dashboard" class="page-content">
-				<div class="flex gap-2 mb-6">
-					<button onclick="switchTab('mb')" id="tab-mb" class="flex-1 py-3 rounded-2xl font-bold bg-[#632323] text-white shadow-lg transition-all">Mind Break Member</button>
-					<button onclick="switchTab('external')" id="tab-ext" class="flex-1 py-3 rounded-2xl font-bold bg-white text-[#632323] border border-[#eee]">عميل خارجي</button>
-				</div>
-				<div class="glass p-6 shadow-xl space-y-4">
-					<div id="form-fields" class="space-y-4"></div>
-					<button onclick="saveProcess()" id="save-btn" class="w-full bg-[#632323] text-white py-5 rounded-3xl font-black mt-6 shadow-xl active:scale-95 transition-all">إرسال وحفظ العملية</button>
-				</div>
-			</section>
+	<!-- Attendance -->
+	<section id="ops-attendance" class="page-content">
+	  <div class="sec-hdr"><h2 data-ar="سجل التحضير" data-en="Attendance">سجل التحضير</h2><div class="line"></div></div>
+	  <div style="display:flex;gap:10px;margin-bottom:16px;">
+		<div class="att-stat"><div class="num" id="cnt-present" style="color:var(--green);">0</div><div class="lbl" data-ar="حاضر" data-en="Present">حاضر</div></div>
+		<div class="att-stat"><div class="num" id="cnt-absent" style="color:var(--red);">0</div><div class="lbl" data-ar="غائب" data-en="Absent">غائب</div></div>
+		<div class="att-stat"><div class="num" id="cnt-total" style="color:var(--muted);">0</div><div class="lbl" data-ar="الكل" data-en="Total">الكل</div></div>
+	  </div>
+	  <div id="attendance-list"></div>
+	</section>
 
-			<section id="reports" class="page-content">
-				<div class="flex justify-between items-center mb-6">
-					<h2 class="text-2xl font-black text-[#632323]">العمليات الحالية</h2>
-					<button onclick="loadReports()" class="p-2 bg-white rounded-full shadow-sm active:rotate-180 transition-all"><i data-lucide="rotate-cw" size="18"></i></button>
-				</div>
-				<div id="reports-list" class="space-y-4"></div>
-			</section>
+  </div><!-- /max-width -->
 
-			<section id="attendance" class="page-content">
-				<h2 class="text-2xl font-black text-[#632323] mb-6 text-center">سجل التحضير اليدوي</h2>
-				<div id="attendance-list" class="space-y-3"></div>
-			</section>
-		</main>
+  <nav class="nav-bar">
+	<button onclick="opsNavTo('ops-dashboard')" id="nav-ops-dashboard" class="nav-item active">
+	  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+	  <span data-ar="جديد" data-en="New">جديد</span>
+	</button>
+	<button onclick="opsNavTo('ops-reports')" id="nav-ops-reports" class="nav-item">
+	  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+	  <span data-ar="التقارير" data-en="Reports">التقارير</span>
+	</button>
+	<button onclick="opsNavTo('ops-attendance')" id="nav-ops-attendance" class="nav-item hidden">
+	  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+	  <span data-ar="التحضير" data-en="Attendance">التحضير</span>
+	</button>
+  </nav>
+</div>
 
-		<nav id="nav-bar" class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md glass p-2 flex justify-around shadow-2xl z-[90]">
-			<button onclick="navTo('dashboard')" id="nav-dashboard" class="p-4 rounded-[1.5rem] transition-all"><i data-lucide="plus-square"></i></button>
-			<button onclick="navTo('reports')" id="nav-reports" class="p-4 rounded-[1.5rem] transition-all"><i data-lucide="clipboard-list"></i></button>
-			<a href="https://mindbreakops.github.io/MBO-HumanResourceSystem/" target="_blank" class="p-4 rounded-[1.5rem] flex items-center justify-center bg-gray-50/50">
-				<i data-lucide="fingerprint" class="text-[#632323]"></i>
-			</a>
-			<button onclick="navTo('attendance')" id="nav-attendance" class="p-4 rounded-[1.5rem] transition-all hidden"><i data-lucide="users"></i></button>
-		</nav>
+<!-- ═══════════════════════════════════════
+	 HR APP
+═══════════════════════════════════════ -->
+<div id="hr-app" class="hidden" style="position:relative;">
+
+  <div class="app-header">
+	<div style="display:flex;flex-direction:column;align-items:flex-end;">
+	  <span id="hr-user-display" style="font-size:13px;font-weight:900;color:var(--text);"></span>
+	  <span id="hr-role-tag" style="font-size:9px;color:#78350f;font-weight:800;letter-spacing:.08em;"></span>
+	</div>
+	<div style="display:flex;gap:8px;align-items:center;">
+	  <button onclick="toggleHrSettings()" style="width:36px;height:36px;background:#f3f4f6;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+	  </button>
+	  <button onclick="location.reload()" style="width:36px;height:36px;background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;color:var(--red);cursor:pointer;display:flex;align-items:center;justify-content:center;">
+		<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+	  </button>
+	</div>
+  </div>
+
+  <!-- HR Settings dropdown -->
+  <div id="hr-settings" style="display:none;position:fixed;top:60px;left:12px;right:12px;z-index:45;background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:var(--shadow-lg);">
+	<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+	  <span style="font-size:13px;font-weight:900;color:var(--text);" data-ar="الإعدادات" data-en="Settings">الإعدادات</span>
+	  <button onclick="toggleHrSettings()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);">×</button>
+	</div>
+	<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+	  <div class="lang-toggle">
+		<button class="lang-btn active" id="lang-ar4" onclick="setLang('ar')">العربية</button>
+		<button class="lang-btn" id="lang-en4" onclick="setLang('en')">English</button>
+	  </div>
+	  <span style="font-size:12px;color:var(--muted);font-weight:700;" data-ar="اللغة" data-en="Language">اللغة</span>
+	</div>
+	<button onclick="showBoardSelector();toggleHrSettings();" style="width:100%;margin-top:12px;padding:10px;background:#f3f4f6;border:1px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:var(--text);" data-ar="⇄ تبديل اللوحة" data-en="⇄ Switch Board">⇄ تبديل اللوحة</button>
+  </div>
+
+  <div style="max-width:520px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px;padding-bottom:32px;">
+
+	<!-- GPS Card -->
+	<div class="card" style="padding:20px;">
+	  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+		<span style="background:var(--accent);color:#fff;font-size:9px;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:.1em;">GPS</span>
+		<span style="font-size:13px;color:var(--text);font-weight:900;" data-ar="تسجيل الحضور" data-en="Attendance Check-In">تسجيل الحضور</span>
+	  </div>
+	  <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+		<div style="position:relative;width:70px;height:70px;flex-shrink:0;">
+		  <div class="radar-ring" style="width:70px;height:70px;top:0;left:0;animation-delay:0s;"></div>
+		  <div class="radar-ring" style="width:70px;height:70px;top:0;left:0;animation-delay:1.2s;"></div>
+		  <div id="radar-core" style="position:relative;z-index:2;width:70px;height:70px;border-radius:50%;background:#f3f4f6;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .5s;">
+			<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+		  </div>
+		</div>
+		<div style="flex:1;">
+		  <div id="distance-text" style="font-size:28px;font-weight:700;color:var(--text);line-height:1;font-family:'Space Mono',monospace;">--<span style="font-size:12px;color:var(--muted);font-family:'Cairo',sans-serif;font-weight:400;"> <span data-ar="متر" data-en="m">متر</span></span></div>
+		  <div id="accuracy-text" style="font-size:10px;color:var(--muted);margin-top:3px;" data-ar="جاري طلب إذن GPS..." data-en="Requesting GPS permission...">جاري طلب إذن GPS...</div>
+		  <div class="dist-track"><div id="distance-bar" class="dist-fill" style="width:0%;background:var(--border);"></div></div>
+		</div>
+	  </div>
+	  <div id="status-msg" style="padding:11px 16px;background:#f9fafb;border:1.5px solid var(--border);border-radius:14px;font-size:13px;font-weight:700;color:var(--muted);text-align:center;margin-bottom:14px;" data-ar="يرجى السماح بالوصول للموقع" data-en="Please allow location access">يرجى السماح بالوصول للموقع</div>
+	  <button onclick="openExternalMap()" style="width:100%;padding:8px;background:transparent;border:none;color:var(--warm);font-size:11px;font-weight:800;cursor:pointer;margin-bottom:14px;font-family:'Cairo',sans-serif;">
+		<span data-ar="📍 تحقق من موقعك على خرائط Google ←" data-en="📍 Verify your location on Google Maps →">📍 تحقق من موقعك على خرائط Google ←</span>
+	  </button>
+	  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+		<button id="inBtn" onclick="recordAttendance('حضور')" disabled style="padding:18px 10px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:16px;color:var(--green);font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;cursor:pointer;opacity:.4;transition:all .3s;display:flex;flex-direction:column;align-items:center;gap:6px;">
+		  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+		  <span data-ar="حضور" data-en="Check In">حضور</span>
+		</button>
+		<button id="outBtn" onclick="recordAttendance('انصراف')" disabled style="padding:18px 10px;background:#fef2f2;border:1.5px solid #fecaca;border-radius:16px;color:var(--red);font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;cursor:pointer;opacity:.4;transition:all .3s;display:flex;flex-direction:column;align-items:center;gap:6px;">
+		  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+		  <span data-ar="انصراف" data-en="Check Out">انصراف</span>
+		</button>
+	  </div>
 	</div>
 
-	<div id="receipt-capture" class="fixed -left-[2000px] w-[380px] bg-[#F8F5EE] rounded-[2.5rem] overflow-hidden font-tajawal shadow-2xl">
-		<div class="bg-[#632323] p-8 text-center text-white relative">
-			<h2 class="text-2xl font-black tracking-tight">MBO VALET</h2>
-			<p class="text-sm opacity-80">Mind Break Operations</p>
+	<!-- Request Form -->
+	<div class="card" style="padding:20px;">
+	  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+		<div style="width:36px;height:36px;background:#fef3c7;border:1px solid #fde68a;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+		  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
 		</div>
-	
-		<div class="p-6 space-y-4">
-			<div class="bg-white/60 p-4 rounded-2xl flex items-center gap-4">
-				<div class="text-[#632323]"><i data-lucide="credit-card"></i></div>
-				<div>
-					<p class="text-[10px] text-gray-500 font-bold uppercase">Card Number</p>
-					<p id="cap-card" class="text-xl font-black text-[#331111]"></p>
-				</div>
-			</div>
-	
-			<div class="bg-white/60 p-4 rounded-2xl flex items-center gap-4">
-				<div class="text-[#632323]"><i data-lucide="car"></i></div>
-				<div>
-					<p class="text-[10px] text-gray-500 font-bold uppercase">Plate Number</p>
-					<p id="cap-plate" class="text-xl font-black text-[#331111] uppercase"></p>
-				</div>
-			</div>
-	
-			<div class="flex gap-4">
-				<div class="flex-1 bg-white/60 p-4 rounded-2xl flex items-center gap-3">
-					<div class="text-[#632323]"><i data-lucide="user" size="18"></i></div>
-					<div>
-						<p class="text-[10px] text-gray-500 font-bold uppercase">Staff</p>
-						<p id="cap-staff-name" class="text-sm font-black text-[#331111]"></p>
-					</div>
-				</div>
-				<div class="flex-1 bg-white/60 p-4 rounded-2xl flex items-center gap-3">
-					<div class="text-[#632323]"><i data-lucide="phone" size="18"></i></div>
-					<div>
-						<p class="text-[10px] text-gray-500 font-bold uppercase">Mobile</p>
-						<p id="cap-mobile" class="text-sm font-black text-[#331111]"></p>
-					</div>
-				</div>
-			</div>
-	
-			<div class="bg-white/60 p-4 rounded-2xl flex items-center gap-4">
-				<div class="text-[#632323]"><i data-lucide="clock"></i></div>
-				<div>
-					<p class="text-[10px] text-gray-500 font-bold uppercase">Parked At</p>
-					<p id="cap-time" class="text-sm font-black text-[#331111]"></p>
-				</div>
-			</div>
-	
-			<div class="bg-[#EAE2D5] p-6 rounded-3xl text-center mt-4">
-				<p class="text-[12px] text-[#632323] font-bold uppercase mb-1">Total Amount</p>
-				<p class="text-4xl font-black text-[#632323]"><span id="cap-amount"></span> SAR</p>
-			</div>
-		</div>
-		
-		<div class="p-6 pt-0 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-			Thank you for choosing Mind Break 
-		</div>
+		<h3 style="font-size:14px;font-weight:900;color:var(--text);" data-ar="تقديم طلب" data-en="Submit Request">تقديم طلب</h3>
+	  </div>
+	  <div style="display:flex;flex-direction:column;gap:10px;">
+		<select id="reqType" class="field">
+		  <option value="استئذان" data-ar="استئذان" data-en="Permission Leave">استئذان</option>
+		  <option value="إجازة" data-ar="طلب إجازة" data-en="Vacation Request">طلب إجازة</option>
+		  <option value="شكوى" data-ar="شكوى أو اقتراح" data-en="Complaint / Suggestion">شكوى أو اقتراح</option>
+		</select>
+		<textarea id="reqDetails" class="field" style="height:90px;" data-placeholder-ar="اكتب التفاصيل هنا..." data-placeholder-en="Write details here..." placeholder="اكتب التفاصيل هنا..."></textarea>
+		<label style="display:block;padding:11px 14px;background:#fffbeb;border:1.5px dashed #fde68a;border-radius:14px;cursor:pointer;">
+		  <span id="attach-label" style="font-size:10px;color:#92400e;font-weight:800;display:block;margin-bottom:5px;" data-ar="📎 إرفاق صورة (اختياري)" data-en="📎 Attach Image (optional)">📎 إرفاق صورة (اختياري)</span>
+		  <input type="file" id="fileInput" accept="image/*" style="font-size:11px;color:var(--muted);background:transparent;border:none;padding:0;width:100%;font-family:'Cairo',sans-serif;">
+		</label>
+		<button onclick="sendRequest()" id="reqBtn" class="btn-primary" data-ar="إرسال للمدير" data-en="Send to Manager">إرسال للمدير</button>
+	  </div>
 	</div>
 
-	<script src="script.js"></script>
+	<!-- Admin Panel -->
+	<div id="admin-panel" class="hidden card" style="padding:20px;border-color:#fde68a;">
+	  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+		<div style="width:36px;height:36px;background:#fef3c7;border:1px solid #fde68a;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+		  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+		</div>
+		<h3 style="font-size:14px;font-weight:900;color:var(--text);" data-ar="طلبات الموظفين" data-en="Employee Requests">طلبات الموظفين</h3>
+		<span style="font-size:9px;color:#92400e;font-weight:800;background:#fef3c7;padding:3px 8px;border-radius:20px;margin-right:auto;">MANAGER</span>
+	  </div>
+	  <div id="admin-requests"></div>
+	</div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+	 RECEIPT (hidden, for capture)
+═══════════════════════════════════════ -->
+<div id="receipt-capture" style="position:fixed;left:-2000px;width:380px;background:#F8F5EE;border-radius:40px;overflow:hidden;font-family:'Cairo',sans-serif;">
+  <div style="background:#3d2b1f;padding:32px;text-align:center;color:white;">
+	<h2 style="font-size:24px;font-weight:900;">MBO VALET</h2>
+	<p style="font-size:12px;opacity:.7;">Mind Break Operations</p>
+  </div>
+  <div style="padding:24px;display:flex;flex-direction:column;gap:12px;">
+	<div style="background:rgba(255,255,255,.8);padding:16px;border-radius:16px;display:flex;align-items:center;gap:12px;"><span style="font-size:20px;">🪪</span><div><p style="font-size:9px;color:#888;font-weight:700;text-transform:uppercase;">Card</p><p id="cap-card" style="font-size:20px;font-weight:900;color:#1f1512;"></p></div></div>
+	<div style="background:rgba(255,255,255,.8);padding:16px;border-radius:16px;display:flex;align-items:center;gap:12px;"><span style="font-size:20px;">🚗</span><div><p style="font-size:9px;color:#888;font-weight:700;text-transform:uppercase;">Plate</p><p id="cap-plate" style="font-size:20px;font-weight:900;color:#1f1512;"></p></div></div>
+	<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+	  <div style="background:rgba(255,255,255,.8);padding:16px;border-radius:16px;"><p style="font-size:9px;color:#888;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Staff</p><p id="cap-staff-name" style="font-size:13px;font-weight:900;color:#1f1512;"></p></div>
+	  <div style="background:rgba(255,255,255,.8);padding:16px;border-radius:16px;"><p style="font-size:9px;color:#888;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Mobile</p><p id="cap-mobile" style="font-size:13px;font-weight:900;color:#1f1512;"></p></div>
+	</div>
+	<div style="background:rgba(255,255,255,.8);padding:16px;border-radius:16px;display:flex;align-items:center;gap:12px;"><span style="font-size:20px;">🕐</span><div><p style="font-size:9px;color:#888;font-weight:700;text-transform:uppercase;">Time</p><p id="cap-time" style="font-size:13px;font-weight:900;color:#1f1512;"></p></div></div>
+	<div style="background:#EAE2D5;padding:24px;border-radius:24px;text-align:center;"><p style="font-size:10px;color:#3d2b1f;font-weight:700;text-transform:uppercase;margin-bottom:6px;">Total</p><p style="font-size:40px;font-weight:900;color:#3d2b1f;font-family:'Space Mono',monospace;"><span id="cap-amount"></span> <span style="font-size:16px;">SAR</span></p></div>
+  </div>
+  <div style="padding:10px 24px;text-align:center;font-size:9px;color:#aaa;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">Thank you for choosing Mind Break</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+	 SCRIPTS
+═══════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────
+const OPS_API = 'https://script.google.com/macros/s/AKfycbykjlTkHepuPCg3NeSzsdncYYGRT0YLErO0Sp4NS7Ma0DJOmYhiF3-F923B-pgk9CcX/exec';
+const HR_API  = 'https://script.google.com/macros/s/AKfycbz34WWbbswac1O6vJaae-rNsRqQZLtObz6e3eFEmx5x3iij9GCz0Hp7fV6wONe-BMAx/exec';
+const CAFE_LAT = 24.7694973, CAFE_LNG = 46.7625231, RADIUS = 150;
+const LOGO_URL = 'https://raw.githubusercontent.com/MindBreakOps/MBO-HumanResourceSystem/main/mind.png';
+
+let currentUser = null, currentMode = 'mb', myCoords = '', myDist = 9999;
+let empStatusMap = {}, currentLang = 'ar';
+let deferredInstallPrompt = null;
+
+// ─────────────────────────────────────
+// PWA — inject manifest as blob
+// ─────────────────────────────────────
+(function setupPWA() {
+  const manifest = {
+	name: 'Mind Break System',
+	short_name: 'MBO',
+	description: 'Mind Break Operations Management System',
+	start_url: './',
+	display: 'standalone',
+	background_color: '#F3F4F6',
+	theme_color: '#3d2b1f',
+	orientation: 'portrait',
+	icons: [
+	  { src: LOGO_URL, sizes: '192x192', type: 'image/png' },
+	  { src: LOGO_URL, sizes: '512x512', type: 'image/png' }
+	]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  document.getElementById('pwa-manifest').href = url;
+
+  // Service Worker (inline as blob URL)
+  if ('serviceWorker' in navigator) {
+	const swCode = `
+const CACHE = 'mbo-v1';
+const ASSETS = ['./', './mindbreak-unified.html'];
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
+  self.skipWaiting();
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+  self.clients.claim();
+});
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+});`;
+	const swBlob = new Blob([swCode], { type: 'application/javascript' });
+	const swUrl  = URL.createObjectURL(swBlob);
+	navigator.serviceWorker.register(swUrl).catch(() => {});
+  }
+
+  // Capture install prompt
+  window.addEventListener('beforeinstallprompt', e => {
+	e.preventDefault();
+	deferredInstallPrompt = e;
+	document.getElementById('install-banner').style.display = 'flex';
+  });
+})();
+
+function installPWA() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => {
+	deferredInstallPrompt = null;
+	document.getElementById('install-banner').style.display = 'none';
+  });
+}
+
+// ─────────────────────────────────────
+// LANGUAGE
+// ─────────────────────────────────────
+const T = {
+  ar: {
+	login_title:'ماند بريك', login_sub:'نظام الإدارة المتكامل',
+	email_label:'البريد الإلكتروني', pass_label:'كلمة المرور',
+	login_btn:'دخول النظام', welcome:'أهلاً وسهلاً',
+	choose_board:'اختر اللوحة التي تريد فتحها',
+	ops_name:'لوحة العمليات', hr_name:'الموارد البشرية',
+	lang_label:'اللغة', switch_board:'⇄ تبديل اللوحة', settings:'الإعدادات',
+	logout:'تسجيل الخروج', install_title:'تثبيت التطبيق', install_sub:'أضف MBO إلى الشاشة الرئيسية',
+	tab_mb:'عضو Mind Break', tab_ext:'عميل خارجي',
+	save_btn:'إرسال وحفظ العملية', ops_title:'العمليات',
+	att_title:'سجل التحضير', present:'حاضر', absent:'غائب', total:'الكل',
+	new_op:'جديد', reports:'التقارير', attendance:'التحضير',
+	gps_title:'تسجيل الحضور', meter:'متر', gps_req:'جاري طلب إذن GPS...',
+	gps_allow:'يرجى السماح بالوصول للموقع', map_btn:'📍 تحقق من موقعك على خرائط Google ←',
+	checkin:'حضور', checkout:'انصراف', req_title:'تقديم طلب',
+	req_type1:'استئذان', req_type2:'طلب إجازة', req_type3:'شكوى أو اقتراح',
+	req_details_ph:'اكتب التفاصيل هنا...', attach:'📎 إرفاق صورة (اختياري)',
+	send_req:'إرسال للمدير', admin_title:'طلبات الموظفين',
+	accept:'قبول ✓', reject:'رفض ✗', attach_link:'📎 المرفق ←',
+	in_range:'✅ أنت داخل نطاق العمل', near_range:'📍 اقترب أكثر من نطاق العمل',
+	out_range:'❌ أنت خارج نطاق العمل', gps_err:'خطأ: يرجى تفعيل GPS ❌',
+	acc_prefix:'دقة:', saved:'تم حفظ العملية!', saved_gps:'تم تسجيل البصمة ✅',
+	req_sent:'تم إرسال الطلب ✅', req_updated:'تم تحديث الطلب',
+	confirm_rec:'تأكيد تسجيل', confirm_vehicle:'تأكيد تغيير حالة المركبة؟',
+	err_fields:'الرجاء إكمال كافة الحقول!', err_details:'يرجى كتابة التفاصيل',
+	err_conn:'خطأ في الاتصال', loading:'جاري التحميل...', loading_upd:'جاري التحديث...',
+	no_data:'لا توجد بيانات', no_requests:'لا توجد طلبات معلقة', fail_load:'فشل التحميل',
+	export_btn:'تصدير ↓', deliver_btn:'تأكيد التسليم ✓', hours_lbl:'ساعات', save_att:'حفظ ✓', saved_att:'✓ تم',
+	member_name:'اسم العضو', free_svc:'خدمة مجانية', plate:'رقم اللوحة', card:'رقم الكرت', client_name:'اسم العميل', phone:'رقم الجوال'
+  },
+  en: {
+	login_title:'MIND BREAK', login_sub:'INTEGRATED MANAGEMENT SYSTEM',
+	email_label:'Email Address', pass_label:'Password',
+	login_btn:'Sign In', welcome:'WELCOME BACK',
+	choose_board:'Choose a board to open',
+	ops_name:'Operations Board', hr_name:'HR Board',
+	lang_label:'Language', switch_board:'⇄ Switch Board', settings:'Settings',
+	logout:'Sign Out', install_title:'Install App', install_sub:'Add MBO to Home Screen',
+	tab_mb:'Mind Break Member', tab_ext:'External Client',
+	save_btn:'Save & Submit', ops_title:'Operations',
+	att_title:'Attendance', present:'Present', absent:'Absent', total:'Total',
+	new_op:'New', reports:'Reports', attendance:'Attendance',
+	gps_title:'Attendance Check-In', meter:'m', gps_req:'Requesting GPS permission...',
+	gps_allow:'Please allow location access', map_btn:'📍 Verify your location on Google Maps →',
+	checkin:'Check In', checkout:'Check Out', req_title:'Submit Request',
+	req_type1:'Permission Leave', req_type2:'Vacation Request', req_type3:'Complaint / Suggestion',
+	req_details_ph:'Write details here...', attach:'📎 Attach Image (optional)',
+	send_req:'Send to Manager', admin_title:'Employee Requests',
+	accept:'Accept ✓', reject:'Reject ✗', attach_link:'📎 Attachment →',
+	in_range:'✅ You are within work area', near_range:'📍 Getting closer to work area',
+	out_range:'❌ You are outside work area', gps_err:'Error: Please enable GPS ❌',
+	acc_prefix:'Accuracy:', saved:'Operation saved!', saved_gps:'Attendance recorded ✅',
+	req_sent:'Request sent ✅', req_updated:'Request updated',
+	confirm_rec:'Confirm record', confirm_vehicle:'Confirm vehicle status change?',
+	err_fields:'Please complete all fields!', err_details:'Please write details',
+	err_conn:'Connection error', loading:'Loading...', loading_upd:'Updating...',
+	no_data:'No data', no_requests:'No pending requests', fail_load:'Failed to load',
+	export_btn:'Export ↓', deliver_btn:'Confirm Delivery ✓', hours_lbl:'hrs', save_att:'Save ✓', saved_att:'✓ Done',
+	member_name:'Member Name', free_svc:'Free Service', plate:'Plate Number', card:'Card Number', client_name:'Client Name', phone:'Phone'
+  }
+};
+
+function t(key) { return T[currentLang][key] || key; }
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('mbo-lang', lang);
+  const html = document.getElementById('html-root');
+  html.lang = lang;
+  html.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+
+  // Update all lang buttons
+  ['lang-ar','lang-ar2','lang-ar3','lang-ar4'].forEach(id => {
+	const el = document.getElementById(id); if(el){ el.className = 'lang-btn' + (lang==='ar'?' active':''); }
+  });
+  ['lang-en','lang-en2','lang-en3','lang-en4'].forEach(id => {
+	const el = document.getElementById(id); if(el){ el.className = 'lang-btn' + (lang==='en'?' active':''); }
+  });
+
+  // Re-translate all [data-ar] / [data-en] elements
+  document.querySelectorAll('[data-ar]').forEach(el => {
+	el.innerText = lang === 'ar' ? el.dataset.ar : el.dataset.en;
+  });
+
+  // Placeholders
+  document.querySelectorAll('[data-placeholder-ar]').forEach(el => {
+	el.placeholder = lang === 'ar' ? el.dataset.placeholderAr : el.dataset.placeholderEn;
+  });
+
+  // Re-render dynamic content if visible
+  if (!document.getElementById('ops-dashboard').classList.contains('active')) return;
+  switchTab(currentMode);
+}
+
+// ─────────────────────────────────────
+// LOGIN
+// ─────────────────────────────────────
+async function handleLogin() {
+  const email = document.getElementById('login-user').value.trim();
+  const pass  = document.getElementById('login-pass').value.trim();
+  if (!email || !pass) return alert(t('err_fields'));
+  const btn = document.getElementById('login-btn');
+  btn.innerText = '...'; btn.disabled = true;
+
+  let opsResult = null, hrResult = null;
+  await Promise.allSettled([
+	(async () => { try { const r = await fetch(OPS_API,{method:'POST',body:JSON.stringify({action:'login',user:email,pass})}); const d = await r.json(); if(d.status==='success') opsResult = {...d, board:'ops'}; } catch(e){} })(),
+	(async () => { try { const r = await fetch(`${HR_API}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`); const d = await r.json(); if(d.status==='success') hrResult = {...d, board:'hr'}; } catch(e){} })()
+  ]);
+
+  btn.innerText = t('login_btn'); btn.disabled = false;
+  if (!opsResult && !hrResult) return alert('بيانات الدخول غير صحيحة / Invalid credentials');
+
+  currentUser = opsResult || hrResult;
+  currentUser._ops = opsResult;
+  currentUser._hr  = hrResult;
+
+  document.getElementById('login-page').classList.add('hidden');
+  if (opsResult && hrResult) showBoardSelectorFromLogin();
+  else if (opsResult) initOpsApp();
+  else initHrApp();
+}
+
+// ─────────────────────────────────────
+// BOARD SELECTOR
+// ─────────────────────────────────────
+function showBoardSelectorFromLogin() {
+  const sel = document.getElementById('board-selector');
+  sel.classList.remove('hidden');
+  document.getElementById('selector-user-name').innerText = currentUser.name;
+  if (!currentUser._ops) { const el=document.getElementById('ops-board-pick'); el.style.opacity='.35'; el.style.pointerEvents='none'; }
+  if (!currentUser._hr)  { const el=document.getElementById('hr-board-pick');  el.style.opacity='.35'; el.style.pointerEvents='none'; }
+}
+function showBoardSelector() {
+  document.getElementById('ops-app').classList.add('hidden');
+  document.getElementById('hr-app').classList.add('hidden');
+  const sel = document.getElementById('board-selector');
+  sel.classList.remove('hidden');
+  document.getElementById('selector-user-name').innerText = currentUser.name;
+}
+function goToBoard(board) {
+  document.getElementById('board-selector').classList.add('hidden');
+  if (board === 'ops') initOpsApp(); else initHrApp();
+}
+
+// ─────────────────────────────────────
+// SETTINGS DROPDOWNS
+// ─────────────────────────────────────
+function toggleOpsSettings() {
+  const el = document.getElementById('ops-settings');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+function toggleHrSettings() {
+  const el = document.getElementById('hr-settings');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#ops-settings') && !e.target.closest('[onclick*="toggleOpsSettings"]'))
+	document.getElementById('ops-settings') && (document.getElementById('ops-settings').style.display='none');
+  if (!e.target.closest('#hr-settings') && !e.target.closest('[onclick*="toggleHrSettings"]'))
+	document.getElementById('hr-settings') && (document.getElementById('hr-settings').style.display='none');
+});
+
+// ─────────────────────────────────────
+// OPERATIONS
+// ─────────────────────────────────────
+function initOpsApp() {
+  const u = currentUser._ops || currentUser;
+  document.getElementById('ops-app').classList.remove('hidden');
+  document.getElementById('ops-user-display').innerText = u.name;
+  document.getElementById('ops-role-tag').innerText = (u.role||'STAFF').toUpperCase();
+  if (u.role === 'Admin') document.getElementById('nav-ops-attendance').classList.remove('hidden');
+  opsNavTo('ops-dashboard');
+}
+
+function switchTab(mode) {
+  currentMode = mode;
+  document.getElementById('tab-mb').className  = 'tab-btn' + (mode==='mb'?' active':'');
+  document.getElementById('tab-ext').className = 'tab-btn' + (mode==='external'?' active':'');
+  const c = document.getElementById('form-fields');
+  const isAr = currentLang === 'ar';
+  if (mode === 'mb') {
+	c.innerHTML = `
+	  <div style="display:flex;justify-content:space-between;align-items:center;">
+		<span class="badge badge-free">${isAr?'خدمة مجانية':'FREE SERVICE'}</span>
+		<label style="font-size:11px;color:var(--muted);font-weight:700;">${isAr?'اسم العضو':'Member Name'}</label>
+	  </div>
+	  <input type="text" id="clientName" placeholder="${isAr?'أدخل اسم العضو':'Enter member name'}" class="field" style="text-align:${isAr?'right':'left'};">
+	  <input type="text" id="plateNum" placeholder="${isAr?'رقم اللوحة':'Plate Number'}" class="field" style="text-align:center;font-size:17px;letter-spacing:.1em;">
+	  <input type="number" id="cardNum" placeholder="${isAr?'رقم الكرت':'Card Number'}" class="field" style="text-align:center;font-size:17px;font-family:'Space Mono',monospace;">`;
+  } else {
+	c.innerHTML = `
+	  <span class="badge badge-paid">${isAr?'مدفوع · 25 ريال':'PAID · 25 SAR'}</span>
+	  <input type="text" id="clientName" placeholder="${isAr?'اسم العميل الخارجي':'External Client Name'}" class="field" style="text-align:${isAr?'right':'left'};">
+	  <input type="number" id="clientPhone" placeholder="${isAr?'رقم الجوال':'Phone Number'}" class="field" style="text-align:${isAr?'right':'left'};font-family:'Space Mono',monospace;">
+	  <input type="text" id="plateNum" placeholder="${isAr?'رقم اللوحة':'Plate Number'}" class="field" style="text-align:center;font-size:17px;letter-spacing:.1em;">
+	  <input type="number" id="cardNum" placeholder="${isAr?'رقم الكرت':'Card Number'}" class="field" style="text-align:center;font-size:17px;font-family:'Space Mono',monospace;">`;
+  }
+}
+
+async function saveProcess() {
+  const plate = document.getElementById('plateNum').value;
+  const card  = document.getElementById('cardNum').value;
+  const client= document.getElementById('clientName').value;
+  const phone = (currentMode==='external') ? (document.getElementById('clientPhone')?.value||'-') : '-';
+  if (!plate||!card||!client) return alert(t('err_fields'));
+  const u = currentUser._ops||currentUser;
+  const data = { action:'saveInvoice', plateNum:plate, cardNum:card, clientName:currentMode==='mb'?'Mind Break member':client, valetName:u.name, serviceType:currentMode==='mb'?'Free':'Paid', amount:currentMode==='mb'?0:25, phone, status:'Parked' };
+  const btn = document.getElementById('save-btn'); btn.disabled=true; btn.innerText='...';
+  try {
+	await fetch(OPS_API, {method:'POST', mode:'no-cors', body:JSON.stringify(data)});
+	await captureAndDownload(data);
+	alert(t('saved')); switchTab(currentMode);
+  } catch(e) { alert(t('err_conn')); }
+  btn.disabled=false; btn.innerText=t('save_btn');
+}
+
+async function captureAndDownload(data) {
+  const u = currentUser._ops||currentUser;
+  document.getElementById('cap-card').innerText = data.cardNum;
+  document.getElementById('cap-plate').innerText = data.plateNum;
+  document.getElementById('cap-staff-name').innerText = u.name;
+  document.getElementById('cap-mobile').innerText = data.phone||'-';
+  document.getElementById('cap-time').innerText = new Date().toLocaleString('en-GB').replace(',','');
+  document.getElementById('cap-amount').innerText = data.amount ?? (currentMode==='mb'?'0':'25');
+  await new Promise(r => setTimeout(r, 100));
+  const canvas = await html2canvas(document.getElementById('receipt-capture'), {scale:3, backgroundColor:null, logging:false, useCORS:true});
+  const link = document.createElement('a'); link.download=`MBO-${data.plateNum}.png`; link.href=canvas.toDataURL('image/png'); link.click();
+}
+
+async function loadReports() {
+  const list = document.getElementById('reports-list');
+  list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-weight:700;">${t('loading_upd')}</div>`;
+  try {
+	const res = await fetch(OPS_API, {method:'POST', body:JSON.stringify({action:'getReports'})});
+	const reports = await res.json();
+	list.innerHTML = '';
+	if (!reports.length) { list.innerHTML=`<div style="text-align:center;padding:40px;color:var(--muted);">${t('no_data')}</div>`; return; }
+	reports.forEach(r => {
+	  const isParked = r.vehicleStatus === 'Parked';
+	  list.innerHTML += `
+		<div class="inv-card">
+		  <div style="display:flex;overflow:hidden;">
+			<div style="width:4px;background:${isParked?'var(--warm)':'var(--green)'};flex-shrink:0;"></div>
+			<div style="padding:14px;flex:1;">
+			  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;">
+				<span class="badge ${isParked?'badge-parked':'badge-done'}">${isParked?'🅿 Parked':'✅ Returned'}</span>
+				<span class="mono" style="font-size:18px;font-weight:700;color:var(--text);">${r.plateNum}</span>
+			  </div>
+			  <div style="font-size:11px;color:var(--muted);margin-bottom:10px;text-align:right;line-height:1.6;">
+				<div>${r.clientName} · ${r.serviceType==='Free'?'<span style="color:var(--green);font-weight:800;">Free</span>':'<span style="color:#92400e;font-weight:800;">25 SAR</span>'}</div>
+				<div>${currentLang==='ar'?'كرت':'Card'} <span class="mono">#${r.cardNum}</span> · ${r.valet}</div>
+			  </div>
+			  <div style="display:flex;gap:8px;">
+				<button onclick='reExport(${JSON.stringify(r)})' class="action-btn" style="border-color:var(--border2);color:var(--muted);flex:1;">${t('export_btn')}</button>
+				${isParked?`<button onclick="updateStatus('${r.plateNum}','${r.cardNum}','Returned')" class="action-btn" style="border-color:#bbf7d0;color:var(--green);background:#f0fdf4;flex:1;">${t('deliver_btn')}</button>`:''}
+			  </div>
+			</div>
+		  </div>
+		</div>`;
+	});
+  } catch(e) { list.innerHTML=`<div style="color:var(--red);text-align:center;padding:20px;">${t('fail_load')}</div>`; }
+}
+
+async function updateStatus(plate, card, newStatus) {
+  if (!confirm(t('confirm_vehicle'))) return;
+  const btn = event.target; btn.disabled=true; btn.innerText='...';
+  try {
+	await fetch(OPS_API, {method:'POST', mode:'no-cors', body:JSON.stringify({action:'updateVehicleStatus', plateNum:plate, cardNum:card, status:newStatus})});
+	alert(t('saved')); setTimeout(loadReports, 1000);
+  } catch(e) { alert(t('err_conn')); btn.disabled=false; btn.innerText=t('deliver_btn'); }
+}
+
+function reExport(r) {
+  captureAndDownload({plateNum:r.plateNum, cardNum:r.cardNum, serviceType:r.serviceType, clientName:r.clientName, phone:r.phone||'-', amount:r.amount||0});
+}
+
+// ─────────────────────────────────────
+// ATTENDANCE (OPS)
+// ─────────────────────────────────────
+async function loadAttendanceSystem() {
+  const list = document.getElementById('attendance-list');
+  list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-weight:700;">${t('loading')}</div>`;
+  empStatusMap = {};
+  try {
+	const res = await fetch(OPS_API, {method:'POST', body:JSON.stringify({action:'getEmployees'})});
+	const emps = await res.json();
+	list.innerHTML = '';
+	document.getElementById('cnt-total').innerText = emps.length;
+	updateAttCounters();
+	emps.forEach(emp => {
+	  empStatusMap[emp.name] = {status:'Present', hours:8};
+	  const id = cssId(emp.name);
+	  list.innerHTML += `
+		<div class="emp-card present" id="empcard-${id}">
+		  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+			<div style="display:flex;gap:6px;">
+			  <button onclick="setEmpStatus('${emp.name}','Present')" id="btn-p-${id}" style="padding:5px 11px;border-radius:9px;font-size:11px;font-weight:800;font-family:'Cairo',sans-serif;cursor:pointer;background:#dcfce7;border:1px solid #bbf7d0;color:var(--green);">${t('present')}</button>
+			  <button onclick="setEmpStatus('${emp.name}','Absent')" id="btn-a-${id}" style="padding:5px 11px;border-radius:9px;font-size:11px;font-weight:800;font-family:'Cairo',sans-serif;cursor:pointer;background:#f9fafb;border:1px solid var(--border2);color:var(--muted);">${t('absent')}</button>
+			</div>
+			<div style="display:flex;align-items:center;gap:8px;">
+			  <div>
+				<div style="font-size:13px;font-weight:900;color:var(--text);text-align:right;">${emp.name}</div>
+				<div style="font-size:10px;color:var(--muted);font-weight:600;text-align:right;">${emp.job||''}</div>
+			  </div>
+			  <div style="width:34px;height:34px;border-radius:10px;background:#f3f4f6;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--accent2);">${emp.name.charAt(0)}</div>
+			</div>
+		  </div>
+		  <div style="display:flex;align-items:center;gap:8px;background:#f9fafb;border-radius:12px;padding:8px 10px;border:1px solid var(--border);">
+			<button onclick="confirmAtt('${emp.name}')" id="save-att-${id}" style="padding:7px 14px;background:var(--accent);color:white;border:none;border-radius:10px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(61,43,31,.2);">${t('save_att')}</button>
+			<div style="display:flex;align-items:center;gap:6px;margin-right:auto;">
+			  <button onclick="changeHours('${emp.name}',-1)" style="width:28px;height:28px;border-radius:8px;background:#fff;border:1.5px solid var(--border2);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+			  <span id="hrs-display-${id}" class="mono" style="min-width:24px;text-align:center;font-size:15px;font-weight:700;color:var(--text);">8</span>
+			  <button onclick="changeHours('${emp.name}',1)" style="width:28px;height:28px;border-radius:8px;background:#fff;border:1.5px solid var(--border2);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+			</div>
+			<input type="hidden" id="hrs-${id}" value="8">
+			<span style="font-size:10px;color:var(--muted);font-weight:700;">${t('hours_lbl')}</span>
+		  </div>
+		</div>`;
+	});
+  } catch(e) { list.innerHTML = `<div style="color:var(--red);text-align:center;">${t('fail_load')}</div>`; }
+}
+
+function cssId(n){ return n.replace(/\s+/g,'-').replace(/[^a-zA-Z0-9\u0600-\u06FF\-]/g,''); }
+
+function setEmpStatus(name, status) {
+  empStatusMap[name] = {...empStatusMap[name], status};
+  const id = cssId(name);
+  const card = document.getElementById('empcard-'+id);
+  const btnP = document.getElementById('btn-p-'+id);
+  const btnA = document.getElementById('btn-a-'+id);
+  if (status === 'Present') {
+	card.className='emp-card present';
+	btnP.style.cssText='padding:5px 11px;border-radius:9px;font-size:11px;font-weight:800;font-family:Cairo,sans-serif;cursor:pointer;background:#dcfce7;border:1px solid #bbf7d0;color:var(--green);';
+	btnA.style.cssText='padding:5px 11px;border-radius:9px;font-size:11px;font-weight:800;font-family:Cairo,sans-serif;cursor:pointer;background:#f9fafb;border:1px solid var(--border2);color:var(--muted);';
+  } else {
+	card.className='emp-card absent';
+	btnA.style.cssText='padding:5px 11px;border-radius:9px;font-size:11px;font-weight:800;font-family:Cairo,sans-serif;cursor:pointer;background:#fef2f2;border:1px solid #fecaca;color:var(--red);';
+	btnP.style.cssText='padding:5px 11px;border-radius:9px;font-size:11px;font-weight:800;font-family:Cairo,sans-serif;cursor:pointer;background:#f9fafb;border:1px solid var(--border2);color:var(--muted);';
+  }
+  updateAttCounters();
+}
+
+function changeHours(name, delta) {
+  const id = cssId(name);
+  const h = document.getElementById('hrs-'+id), d = document.getElementById('hrs-display-'+id);
+  let v = parseInt(h.value||8)+delta; v = Math.max(0, Math.min(24, v));
+  h.value=v; d.innerText=v; empStatusMap[name]={...empStatusMap[name],hours:v};
+}
+
+function updateAttCounters() {
+  let p=0, a=0;
+  Object.values(empStatusMap).forEach(e => { if(e.status==='Present') p++; else a++; });
+  document.getElementById('cnt-present').innerText=p;
+  document.getElementById('cnt-absent').innerText=a;
+  document.getElementById('cnt-total').innerText=Object.keys(empStatusMap).length;
+}
+
+async function confirmAtt(name) {
+  const u = currentUser._ops||currentUser, id = cssId(name);
+  const btn = document.getElementById('save-att-'+id); btn.disabled=true; btn.innerText='...';
+  const data = { action:'submitAttendance', employeeName:name, hours:document.getElementById('hrs-'+id).value, status:empStatusMap[name]?.status||'Present', date:new Date().toLocaleDateString('en-CA'), submittedBy:u.name };
+  try {
+	await fetch(OPS_API, {method:'POST', mode:'no-cors', body:JSON.stringify(data)});
+	btn.innerText=t('saved_att'); btn.style.background='#dcfce7'; btn.style.color='var(--green)'; btn.style.border='1px solid #bbf7d0'; btn.style.boxShadow='none';
+  } catch(e) { alert(t('err_conn')); btn.disabled=false; btn.innerText=t('save_att'); }
+}
+
+function opsNavTo(id) {
+  document.querySelectorAll('#ops-app .page-content').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#ops-app .nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const nb = document.getElementById('nav-'+id); if(nb) nb.classList.add('active');
+  if (id==='ops-reports') loadReports();
+  if (id==='ops-attendance') loadAttendanceSystem();
+}
+
+// ─────────────────────────────────────
+// HR
+// ─────────────────────────────────────
+function initHrApp() {
+  const u = currentUser._hr||currentUser;
+  document.getElementById('hr-app').classList.remove('hidden');
+  document.getElementById('hr-user-display').innerText = u.name;
+  document.getElementById('hr-role-tag').innerText = (u.job||'').toUpperCase();
+  if (u.job === 'System Manager') { document.getElementById('admin-panel').classList.remove('hidden'); loadAdminRequests(); }
+  startGPS();
+}
+
+function startGPS() {
+  if (!navigator.geolocation) return alert('GPS not supported');
+  navigator.geolocation.watchPosition(pos => {
+	const {latitude:lat, longitude:lng, accuracy} = pos.coords;
+	myCoords = `${lat},${lng}`; myDist = getDist(lat, lng, CAFE_LAT, CAFE_LNG);
+	const distNum = Math.round(myDist);
+	document.getElementById('distance-text').innerHTML = `<span class="mono" style="font-size:28px;font-weight:700;">${distNum}</span><span style="font-size:12px;color:var(--muted);font-family:'Cairo',sans-serif;"> ${t('meter')}</span>`;
+	document.getElementById('accuracy-text').innerText = `${t('acc_prefix')} ±${Math.round(accuracy)}${t('meter')}`;
+	const bar=document.getElementById('distance-bar'), msg=document.getElementById('status-msg'), core=document.getElementById('radar-core');
+	if (myDist <= RADIUS) {
+	  msg.innerText = t('in_range');
+	  msg.style.cssText='padding:11px 16px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:14px;font-size:13px;font-weight:700;color:var(--green);text-align:center;margin-bottom:14px;';
+	  core.style.cssText='position:relative;z-index:2;width:70px;height:70px;border-radius:50%;background:#dcfce7;border:2px solid #86efac;display:flex;align-items:center;justify-content:center;transition:all .5s;animation:gPulse 2s infinite;';
+	  core.querySelector('svg').setAttribute('stroke','var(--green)');
+	  bar.style.width='100%'; bar.style.background='var(--green)';
+	  toggleHrBtns(true);
+	} else {
+	  msg.innerText = myDist < 500 ? t('near_range') : t('out_range');
+	  msg.style.cssText='padding:11px 16px;background:#fef2f2;border:1.5px solid #fecaca;border-radius:14px;font-size:13px;font-weight:700;color:var(--red);text-align:center;margin-bottom:14px;';
+	  core.style.cssText='position:relative;z-index:2;width:70px;height:70px;border-radius:50%;background:#fef2f2;border:2px solid #fecaca;display:flex;align-items:center;justify-content:center;transition:all .5s;';
+	  core.querySelector('svg').setAttribute('stroke','var(--red)');
+	  bar.style.width=Math.max(5,100-(myDist/8))+'%'; bar.style.background='var(--red)';
+	  toggleHrBtns(false);
+	}
+  }, () => { document.getElementById('status-msg').innerText = t('gps_err'); }, {enableHighAccuracy:true});
+}
+
+function toggleHrBtns(on) {
+  ['inBtn','outBtn'].forEach(id => {
+	const b=document.getElementById(id); b.disabled=!on; b.style.opacity=on?'1':'.4'; b.style.cursor=on?'pointer':'not-allowed';
+  });
+}
+
+async function recordAttendance(type) {
+  const u = currentUser._hr||currentUser;
+  const label = type==='حضور'?t('checkin'):t('checkout');
+  if (!confirm(`${t('confirm_rec')} ${label}؟`)) return;
+  try {
+	await fetch(HR_API, {method:'POST', body:JSON.stringify({action:'attendance', name:u.name, type, location:'Mind Break', distance:Math.round(myDist), coords:myCoords})});
+	alert(t('saved_gps'));
+  } catch(e) { alert(t('err_conn')); }
+}
+
+async function compressImg(file) {
+  return new Promise(res => {
+	const r=new FileReader(); r.readAsDataURL(file);
+	r.onload=e=>{ const img=new Image(); img.src=e.target.result; img.onload=()=>{ const canvas=document.createElement('canvas'),s=800/img.width; canvas.width=800; canvas.height=img.height*s; canvas.getContext('2d').drawImage(img,0,0,800,canvas.height); res(canvas.toDataURL('image/jpeg',.6)); }; };
+  });
+}
+
+async function sendRequest() {
+  const b=document.getElementById('reqBtn'), d=document.getElementById('reqDetails').value;
+  if (!d) return alert(t('err_details'));
+  b.innerText='...'; b.disabled=true;
+  const u=currentUser._hr||currentUser, f=document.getElementById('fileInput');
+  let fData = f.files[0] ? await compressImg(f.files[0]) : null;
+  try {
+	await fetch(HR_API, {method:'POST', body:JSON.stringify({action:'submit_request', name:u.name, type:document.getElementById('reqType').value, details:d, fileData:fData})});
+	alert(t('req_sent')); location.reload();
+  } catch(e) { alert(t('err_conn')); b.disabled=false; b.innerText=t('send_req'); }
+}
+
+async function loadAdminRequests() {
+  const cont = document.getElementById('admin-requests');
+  cont.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px;">${t('loading')}</div>`;
+  try {
+	const res = await fetch(HR_API, {method:'POST', body:JSON.stringify({action:'get_requests'})});
+	const data = await res.json();
+	if (!data.length) { cont.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px;">${t('no_requests')}</div>`; return; }
+	cont.innerHTML = data.slice().reverse().map(r => `
+	  <div style="padding:12px 0;border-bottom:1px solid var(--border);">
+		<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;">
+		  <div style="display:flex;gap:6px;">
+			<button onclick="updateHrStatus(${r.id},'مقبول')" style="padding:5px 12px;background:#dcfce7;border:1px solid #bbf7d0;color:var(--green);border-radius:9px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:800;cursor:pointer;">${t('accept')}</button>
+			<button onclick="updateHrStatus(${r.id},'مرفوض')" style="padding:5px 12px;background:#fef2f2;border:1px solid #fecaca;color:var(--red);border-radius:9px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:800;cursor:pointer;">${t('reject')}</button>
+		  </div>
+		  <div style="text-align:right;">
+			<div style="font-size:13px;font-weight:900;color:var(--text);">${r.name}</div>
+			<div style="font-size:10px;color:var(--warm);font-weight:700;">${r.type}</div>
+		  </div>
+		</div>
+		${r.details?`<div style="font-size:11px;color:var(--muted);text-align:right;line-height:1.6;">${r.details}</div>`:''}
+		${r.file&&r.file!=='لا يوجد مرفق'?`<a href="${r.file}" target="_blank" style="font-size:10px;color:var(--warm);font-weight:700;display:block;margin-top:5px;text-align:right;">${t('attach_link')}</a>`:''}
+	  </div>`).join('');
+  } catch(e) { cont.innerHTML=`<div style="color:var(--red);font-size:12px;text-align:center;">${t('fail_load')}</div>`; }
+}
+
+async function updateHrStatus(id, s) {
+  await fetch(HR_API, {method:'POST', body:JSON.stringify({action:'update_status', id, newStatus:s})});
+  alert(t('req_updated')); loadAdminRequests();
+}
+
+function openExternalMap() { if(myCoords) window.open(`https://www.google.com/maps?q=${myCoords}`,'_blank'); }
+
+function getDist(la1,lo1,la2,lo2) {
+  const R=6371e3, dLa=(la2-la1)*Math.PI/180, dLo=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ─────────────────────────────────────
+// INIT
+// ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('mbo-lang') || 'ar';
+  setLang(saved);
+});
+</script>
 </body>
 </html>
